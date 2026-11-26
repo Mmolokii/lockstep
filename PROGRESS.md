@@ -53,16 +53,16 @@ _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 - CI doesn't run Postgres or Redis service containers yet. They're added in M4, when tests first need them.
 - `pnpm build` runs no tasks yet. No package has a build script until the apps arrive (M2, M3).
 
-## Delivery pipeline (Cycle 1)
+## Delivery pipeline (Cycle 1): merged
 
-In review as stacked PRs, merged in order:
-- **#104**: ADRs 0004–0008. CodeMirror 6 chosen on measured bundle size (209 KB vs ~977 KB gzip for Monaco); 0006–0008 Proposed pending their RFCs
-- **#105**: `pnpm verify`. `doctor` is live; 5 scenarios pending (#100–#103, #52), guarded by `check-registry`
-- **#106**: staged `ci.yml`, pipeline contract, coverage tiers, bundle budgets, and `pnpm ci:local` mirroring CI exactly
-- **#107**: `security.yml`, `e2e.yml`, and `deploy.yml` with an expand-only migration gate
-- **This PR**: AGENTS.md, protocol (draft), runbook, feature map, branch protection, report placeholders
+- **#104**: ADRs 0004–0008 (CodeMirror 6 on measured bundle size; 0006–0008 Proposed pending RFCs)
+- **#105**: `pnpm verify` with doctor and the scenario registry
+- **#107**: staged CI gate, pipeline contract, coverage tiers, bundle budgets, `ci:local`, security, e2e and deploy workflows (includes #106, auto-closed when its base branch was deleted)
+- **#108**: AGENTS.md, protocol draft, runbook, feature map, report placeholders
+- `main` is protected by a repository ruleset: 9 required checks, up to date, squash only, no bypass. Verified with the API in [docs/branch-protection.md](docs/branch-protection.md)
+- **#109** (in review): adopts the useful parts of the review drafts (teardown, preconditions and seeds enforced by the verify runner) and records what was rejected
 
-**After merge:** apply [docs/branch-protection.md](docs/branch-protection.md) once every check has reported on `main`.
+**Open decisions for you:** hosting provider and accounts for M3.5 (#49), which turns deploys on.
 
 ## Tech debt register
 

@@ -47,6 +47,8 @@ pnpm verify doctor
 | Security checks (audit + authorisation scenario) | `pnpm security:local` |
 | **The whole CI gate, locally** | `pnpm ci:local` |
 
+The one CI step that can't run locally is CodeQL, which needs GitHub's analysis service. Everything else in `security.yml` runs through `pnpm security:local`.
+
 Run one package's tests with `pnpm --filter @lockstep/<name> test`. Test files are named by kind: `*.test.ts` (unit), `*.property.test.ts`, `*.fuzz.test.ts`, `*.integration.test.ts`.
 
 **Before opening a PR, `pnpm ci:local` must end with `✓ ci:local passed every CI step`.** It runs the exact `run:` lines from `.github/workflows/ci.yml`, in order, against docker compose.
@@ -65,9 +67,12 @@ Run one package's tests with `pnpm --filter @lockstep/<name> test`. Test files a
 | `malformed-message` | Fuzzed frames never crash the server *(pending: #102)* |
 | `smoke` | Deployed environment answers end to end *(pending: #52)* |
 | `all` | Every active scenario |
+| `--seed <n>` | Replay a scenario run with the same random choices (the seed is printed on every run) |
 | `check-registry`, `check-contract`, `check-budgets` | Rule checks used by CI (`--offline` skips GitHub lookups locally) |
 
 A scenario is **pending** until the components it drives exist. When you implement the feature behind a pending scenario, implement its `run` in `verify/src/scenarios.ts` against real processes and mark it `active` in the same PR. CI fails if the tracking issue closes while the scenario is still pending. [docs/feature-map.md](docs/feature-map.md) maps every v1 feature to its scenario.
+
+The runner checks preconditions, releases everything a scenario registers (pass, fail or throw) and owns the seed. Rules for writing a scenario's `run`, such as port 0, Node's built-in `WebSocket`, real signed tokens and no unasserted steps, are in [verify/README.md](verify/README.md).
 
 ## Where things live
 
@@ -98,7 +103,8 @@ A scenario is **pending** until the components it drives exist. When you impleme
 | Actions pinned to SHAs; no untrusted data interpolated into `run:`; least-privilege permissions | `scripts/workflows.test.mjs` |
 | CI and local run the same steps | `ci:local` parses `ci.yml` |
 | Conventional PR titles; PRs close an issue | `pr-hygiene.yml` |
-| No direct pushes to `main`; required checks; linear history | Branch protection ([docs/branch-protection.md](docs/branch-protection.md)) |
+| No direct pushes to `main`; 9 required checks, up to date; linear history; squash only; no bypass, admins included | Repository ruleset ([docs/branch-protection.md](docs/branch-protection.md)) |
+| Scenarios clean up, check preconditions and use a replayable seed | The verify runner (`verify/src/runner.ts`) |
 | No committed secrets | GitHub secret scanning with push protection |
 
 ## Never do
@@ -123,7 +129,8 @@ These can't be fully enforced by tooling yet, so they're rules. Breaking one is 
 11. **Never start work without an issue.** Anything over 30 minutes needs one, with acceptance criteria, on the board.
 12. **Never add a runtime dependency without justifying it** in the PR: one line on why, and the alternative considered.
 13. **Never edit the decision of an accepted ADR.** Write a new ADR that supersedes it.
-14. **Never push to `main`, force-push a shared branch, or merge with `--admin`.**
+14. **Never push to `main`, force-push a shared branch, or merge with `--admin`.** There's no bypass. In an emergency, revert through a PR ([docs/branch-protection.md](docs/branch-protection.md#emergency-procedure-no-bypass)).
+17. **Never use `Math.random` in a verify scenario**, and never write a step that can't fail. Use `ctx.random`, and assert something observable.
 15. **Never commit `.env` or any secret**, and **never add AI attribution** (`Co-Authored-By`, "Generated with") to commits or PRs.
 16. **Never close an issue whose acceptance criteria aren't demonstrably met.** Close it through the PR that meets them.
 

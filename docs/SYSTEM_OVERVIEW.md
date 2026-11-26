@@ -274,9 +274,9 @@ Assets to protect: **document contents** (which may include secrets people paste
 | CodeQL code scanning | Finds vulnerable patterns in our code |
 | GitHub secret scanning + push protection | Blocks committed credentials |
 | GitHub Actions pinned to commit SHAs, minimal `GITHUB_TOKEN` permissions | Limits the damage of a compromised action |
-| OIDC from CI to cloud providers wherever supported | No long-lived deploy keys |
+| OIDC from CI to cloud providers wherever supported; where it isn't (Fly.io), scoped deploy tokens with an expiry, held in GitHub Environment secrets | No long-lived, broad deploy keys |
 | SBOM generated on release (e.g. CycloneDX) | A record of exactly what shipped |
-| Branch protection with required checks | Nothing reaches `main` untested |
+| A repository ruleset: required checks, PR required, linear history, squash only, no bypass ([branch-protection.md](branch-protection.md)) | Nothing reaches `main` untested |
 | `SECURITY.md` | Tells people how to report vulnerabilities privately |
 
 ### Secrets management
