@@ -6,7 +6,7 @@ _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 
 | Milestone | Status |
 |---|---|
-| M0 · Foundations | 🟡 In review ([#1](https://github.com/Mmolokii/lockstep/pull/1)) |
+| M0 · Foundations | ✅ Done ([#1](https://github.com/Mmolokii/lockstep/pull/1)) |
 | M1 · CRDT lab | 🟡 In review (`feat/m1-crdt-lab`) |
 | M2 · Editor, local-first | ⚪ Not started |
 | M3 · Sync server v1 | ⚪ Not started |
@@ -17,7 +17,7 @@ _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 | M7 · Scale and observability | ⚪ Not started |
 | M8 · Deploy, release, docs | ⚪ Not started |
 
-## M0 status
+## M0 status (done)
 
 **Done**
 - Spec reviewed. Amendments agreed and recorded in `docs/BUILD_PROMPT.md` §0
@@ -32,8 +32,7 @@ _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 - Positioning bullets in `docs/prior-art.md`
 - Branch protection on `main` (requires CI), private vulnerability reporting, secret scanning push protection
 
-**Remaining**
-- Merge the M0 PR once CI is green
+- Merged in #1. All GitHub Actions are pinned to commit SHAs (CodeQL alert)
 
 ## M1 status
 
