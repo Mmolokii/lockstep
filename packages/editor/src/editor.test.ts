@@ -1,8 +1,9 @@
 import { language } from "@codemirror/language";
 import { EditorView, runScopeHandlers } from "@codemirror/view";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import * as Y from "yjs";
 import { createEditor, type Editor } from "./editor.ts";
+import * as languages from "./languages.ts";
 
 const isMac = /Mac/.test(navigator.platform);
 const mod = (key: string, extra: KeyboardEventInit = {}) =>
@@ -80,6 +81,22 @@ describe("language", () => {
     const pending = editor.setFilename("main.go");
     editor.destroy();
     await expect(pending).resolves.toBeUndefined();
+  });
+});
+
+describe("language loading failures", () => {
+  it("stays usable as plain text when the grammar can't load", async () => {
+    const spy = vi.spyOn(languages, "loadLanguage").mockRejectedValue(new Error("offline"));
+    try {
+      const { editor, ytext } = setup({ filename: "main.py" });
+      await Promise.resolve();
+      expect(editor.view.state.facet(language)).toBeNull();
+      editor.view.dispatch({ changes: { from: 0, insert: "x" } });
+      expect(ytext.toString()).toBe("x");
+      await expect(editor.setFilename("lib.rs")).rejects.toThrow("offline");
+    } finally {
+      spy.mockRestore();
+    }
   });
 });
 
