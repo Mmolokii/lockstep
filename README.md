@@ -45,7 +45,7 @@ pnpm test
 | `apps/web` | Next.js app _(M2)_ |
 | `apps/sync` | WebSocket sync server _(M3)_ |
 | `packages/protocol` | Wire protocol and close codes |
-| `packages/crdt-lab` | A toy CRDT built from first principles _(M1)_ |
+| `packages/crdt-lab` | A toy CRDT built from first principles, with convergence tests against it and Yjs |
 | `infra/` | Docker Compose, Prometheus, Grafana |
 | `docs/` | ADRs, prior art, protocol, runbook |
 
