@@ -3,6 +3,8 @@ import { integrationGlob, standardCoverage } from "../../vitest.shared.ts";
 
 export default defineConfig({
   test: {
+    // IndexedDB comes from fake-indexeddb, imported by the tests that need it.
+    environment: "happy-dom",
     include: ["src/**/*.test.ts"],
     exclude: [integrationGlob],
     coverage: {
