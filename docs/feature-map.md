@@ -13,7 +13,7 @@ Every v1 feature: how a user reaches it, how to drive it without a browser, its 
 | **Honest sync status** | Status indicator in the editor header | Shown in every scenario's output; e2e `status never lies` *(#88)* | ⚪ M3/M6a | "Synced" requires a server `ack` covering local updates. "Saving" is normal for ~500 ms after typing (batched writes). A green dot without an ack is a bug. |
 | **Viewer is read-only (server-enforced)** | Open a viewer share link | `verify viewer-rejected` *(pending #103)* | ⚪ M5 | The editor UI being read-only proves nothing; the server must reject raw `update` **and non-empty sync step 2** messages with 4403. A viewer with stale offline edits triggers step 2. |
 | **Malformed input never crashes the server** | Not user-facing | `verify malformed-message` *(pending #102)* | ⚪ M3 | A text frame is malformed (4400). Oversized frames are 4413, not 4400. |
-| **Cross-tab sync without a server** | Same file in two tabs | e2e `two tabs + reload` *(#29)* | ⚪ M2 | BroadcastChannel only works within one origin and one browser profile. |
+| **Cross-tab sync without a server** | Same file in two tabs (`/scratch`) | e2e `cross-tab.spec.ts`; unit `tab-sync.test.ts`; exit test `two tabs + reload` *(#29)* | ✅ M2 | BroadcastChannel only works within one origin and one browser profile: `localhost` and `127.0.0.1` are separate, and so are private windows. Messages never leave the browser. |
 
 ## Identity, projects, sharing
 
