@@ -86,8 +86,8 @@ An open-source Yjs server in Rust from Jamsocket, persisting to S3-compatible st
 
 ## Lockstep's positioning
 
-> **Learner task (M0):** write three honest bullets in your own words. Say what Lockstep does *differently or more transparently* than the tools above, not that it's better. Prompts to think about: what can a reviewer *see* in Lockstep that they can't see in Liveblocks? Which numbers will Lockstep publish that the others don't? Which hard parts that Hocuspocus hides are written, tested and documented here?
+Lockstep doesn't compete with these tools as a product. Hocuspocus or Liveblocks would be the right choice for a team shipping a feature. Lockstep's value is showing the inside of a sync system:
 
-1. _TODO_
-2. _TODO_
-3. _TODO_
+1. **You can watch the sync layer work.** A built-in devtools panel shows connection state, pending updates, the state vector, peers and message traffic as it happens. "Simulate offline" and an added-latency slider let a reviewer cause a failure and watch the recovery, which no hosted backend lets you do.
+2. **Every claim is backed by a measurement or a test.** p95 propagation latency, connections per instance and the chaos-test result are published with the method and instance specs. Convergence is property-tested, the protocol parser is fuzz-tested, and viewer read-only access is proven with raw-message tests.
+3. **The hard parts are built here, not hidden behind a library.** These are the parts that off-the-shelf servers keep inside their hooks: two-step sync with real acknowledgements, per-message authorisation, a single writer per document across instances, compaction, backpressure and graceful drain. Each one is written, tested and explained in an ADR or in `DESIGN.md`.

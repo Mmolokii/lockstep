@@ -6,7 +6,7 @@ _Last updated: 2026-11-26_
 
 | Milestone | Status |
 |---|---|
-| M0 · Foundations | 🟡 In progress (`chore/m0-foundations`) |
+| M0 · Foundations | 🟡 In review (PR open) |
 | M1 · CRDT lab | ⚪ Not started |
 | M2 · Editor, local-first | ⚪ Not started |
 | M3 · Sync server v1 | ⚪ Not started |
@@ -28,18 +28,17 @@ _Last updated: 2026-11-26_
 - Docker Compose: Postgres 18, Redis 8, Prometheus, Grafana, all verified healthy locally
 - `DESIGN.md` v1, ADR template, ADRs 0001–0002, `docs/prior-art.md`
 
-**Learner tasks (open)**
-- [ ] Write `turbo.json` so that `pnpm check:pipeline` passes (7 checks)
-- [ ] Write Lockstep's three positioning bullets in `docs/prior-art.md`
+- `turbo.json` task graph (all 7 pipeline checks pass, and repeat runs hit the cache)
+- Positioning bullets in `docs/prior-art.md`
+- Branch protection on `main` (requires CI), private vulnerability reporting, secret scanning push protection
 
-**Remaining after the learner tasks**
-- Open the M0 PR, get CI green, merge
-- Turn on branch protection for `main` (require CI), private vulnerability reporting, secret scanning push protection
+**Remaining**
+- Merge the M0 PR once CI is green
 
 ## Known issues
 
-- Root `pnpm typecheck` / `test` / `build` fail until `turbo.json` exists (learner task).
 - CI doesn't run Postgres or Redis service containers yet. They're added in M4, when tests first need them.
+- `pnpm build` runs no tasks yet. No package has a build script until the apps arrive (M2, M3).
 
 ## Decisions pending
 
