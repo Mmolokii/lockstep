@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { checkBudgets, loadBudgets } from "./budgets.ts";
 import { loadConfig } from "./config.ts";
 import { checkContract, loadContract } from "./contract.ts";
-import { doctor } from "./doctor.ts";
+import { doctor, preflight } from "./doctor.ts";
 import { checkRegistry, githubIssueLookup } from "./registry.ts";
 import {
   type Check,
@@ -17,6 +17,7 @@ import {
   type Outcome,
   outcomeOf,
 } from "./report.ts";
+import { executeScenario } from "./runner.ts";
 import { findScenario, type Scenario, scenarios } from "./scenarios.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
@@ -34,6 +35,7 @@ Commands:
 
 Options:
   --offline              check-*: skip GitHub issue-state lookups (local only; CI never skips)
+  --seed <n>             <scenario>|all: replay a run with the same random choices (printed on every run)
   --allow-pending        <scenario>: exit 0 instead of 2 when pending, with a CI notice. Only safe
                          where check-registry also runs (it fails if the tracking issue is closed)
 
@@ -44,7 +46,7 @@ function print(title: string, checks: readonly Check[]): void {
   for (const c of checks) console.log(formatCheck(c));
 }
 
-async function runScenario(s: Scenario): Promise<Outcome> {
+async function runScenario(s: Scenario, seed: number): Promise<Outcome> {
   console.log(`\n${s.name}: ${s.summary}`);
   console.log(`  tracking issue: #${s.issue}`);
   console.log("  asserts:");
@@ -57,15 +59,27 @@ async function runScenario(s: Scenario): Promise<Outcome> {
     console.log(`  status: pending. Becomes active when #${s.issue} lands.`);
     return "pending";
   }
-  const checks = await s.run(loadConfig());
+  console.log(`  seed: ${seed} (replay: pnpm verify ${s.name} --seed ${seed})`);
+  const config = loadConfig();
+  const { outcome, checks } = await executeScenario(s, {
+    config,
+    seed,
+    preflight: () => preflight(config, ROOT),
+  });
   print("  checked:", checks);
-  return outcomeOf(checks);
+  return outcome;
 }
 
 async function main(argv: string[]): Promise<number> {
   const [command, ...rest] = argv;
   const offline = rest.includes("--offline");
   const allowPending = rest.includes("--allow-pending");
+  const seedIdx = rest.indexOf("--seed");
+  const seed = seedIdx !== -1 ? Number(rest[seedIdx + 1]) : Math.floor(Math.random() * 2 ** 31);
+  if (!Number.isInteger(seed)) {
+    console.error("--seed needs an integer");
+    return ExitCode.fail;
+  }
   if (existsSync(join(ROOT, ".env"))) process.loadEnvFile(join(ROOT, ".env"));
 
   if (!command || command === "help" || command === "--help") {
@@ -117,7 +131,7 @@ async function main(argv: string[]): Promise<number> {
 
   if (command === "all") {
     const results = new Map<string, Outcome>();
-    for (const s of scenarios) results.set(s.name, await runScenario(s));
+    for (const s of scenarios) results.set(s.name, await runScenario(s, seed));
     const counts = { pass: 0, fail: 0, pending: 0 };
     for (const o of results.values()) counts[o]++;
     console.log(
@@ -132,7 +146,7 @@ async function main(argv: string[]): Promise<number> {
     console.error(`Unknown command: ${command}\n\n${USAGE}`);
     return ExitCode.fail;
   }
-  const outcome = await runScenario(scenario);
+  const outcome = await runScenario(scenario, seed);
   console.log(formatOutcome(scenario.name, outcome));
   if (outcome === "pending" && allowPending) {
     // GitHub Actions renders this as a visible annotation on the run.
