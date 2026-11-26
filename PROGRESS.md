@@ -52,13 +52,16 @@ _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 
 **Done**
 - **#112** (closes #25): Next.js 16 shell with baseline security headers; Playwright on Chromium, Firefox and WebKit against the production build; web bundle budget enforced (170 KB of 350 KB gzip). The e2e suite caught `upgrade-insecure-requests` blanking WebKit over plain HTTP on its first run
-- **#26** (in review): `packages/editor`, CodeMirror 6 bound to a Y.Text. 14 languages, each a lazy chunk; light and dark themes; Yjs-scoped undo; keyboard-only use. 35 tests, 100% coverage
+- **#113** (closes #26): `packages/editor`, CodeMirror 6 bound to a Y.Text. 14 languages, each a lazy chunk; light and dark themes; Yjs-scoped undo; keyboard-only use
+- **#115** (closes #114): Turbo strict env mode was dropping `LOCKSTEP_HTTPS` from the build; the Vercel skip rule now builds whenever it can't tell. Production is live at https://lockstep-ebon.vercel.app with the full header set (checked from the Cape Town edge)
+- **#117** (closes #116, in review): route budgets measured in Chromium ([ADR 0009](docs/adr/0009-route-bundle-budgets.md)). `/` 131.5 KB of 150; `/scratch` 328.9 KB of 350; all chunks 585 KB of a 650 KB backstop
+- **#27** (in review): `/scratch` editor persisted to IndexedDB (y-indexeddb); reload and offline editing covered by e2e
 
-**Next:** #27 IndexedDB persistence, #28 cross-tab sync, #29 e2e two tabs plus reload. The editor enters the web bundle with #27. The budget sums every chunk, lazy ones included, so expect it to be revisited with measurements then
+**Next:** #28 cross-tab sync (BroadcastChannel), #29 the M2 exit e2e (two tabs plus reload)
 
 ## Known issues
 
-- The Vercel preview build fails until the project's Root Directory is set to `apps/web` (Vercel settings). It isn't a required check
+_None._
 
 ## Delivery pipeline (Cycle 1): merged
 

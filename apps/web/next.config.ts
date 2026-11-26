@@ -9,7 +9,7 @@ const config: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   // Workspace packages export TypeScript source (ADR 0002); Next compiles them.
-  transpilePackages: ["@lockstep/protocol"],
+  transpilePackages: ["@lockstep/protocol", "@lockstep/editor"],
   // Type errors are a CI gate on their own (`pnpm typecheck` with TypeScript 7),
   // so `next build` doesn't need to run a second, older type checker.
   typescript: { ignoreBuildErrors: true },

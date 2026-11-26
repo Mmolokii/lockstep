@@ -43,7 +43,10 @@ export interface Editor {
   /** Undo history scoped to this client's own edits, never a collaborator's. */
   readonly undoManager: Y.UndoManager;
   setTheme(theme: Theme): void;
-  /** Switches highlighting for a new file name. Resolves when the grammar has loaded. */
+  /**
+   * Switches highlighting for a new file name. Resolves when the grammar has
+   * loaded; rejects if it can't load, leaving the current highlighting.
+   */
   setFilename(filename: string): Promise<void>;
   destroy(): void;
 }
@@ -103,7 +106,9 @@ export function createEditor(options: EditorOptions): Editor {
     view.dispatch({ effects: languageSlot.reconfigure(support) });
   };
 
-  if (filename !== undefined) void setFilename(filename);
+  // If the grammar can't load (offline before its chunk was cached), the
+  // editor stays usable as plain text; a later setFilename can retry.
+  if (filename !== undefined) setFilename(filename).catch(() => undefined);
 
   return {
     view,

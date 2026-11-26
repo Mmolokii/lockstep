@@ -21,6 +21,12 @@
       "ready": "h1",
       "maxKB": 150,
       "basis": "131.5 KB measured in Chromium (Apple M4) with the editor wired in: Next.js, React and the shell. The editor must never load here."
+    },
+    {
+      "path": "/scratch",
+      "ready": ".cm-content",
+      "maxKB": 350,
+      "basis": "328.9 KB measured in Chromium (Apple M4): shell, editor, Yjs, y-indexeddb and the TypeScript grammar. 350 KB is the ADR 0004 editor basis."
     }
   ]
 }
