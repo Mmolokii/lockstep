@@ -9,7 +9,8 @@
       "outputs": []
     },
     "test": {
-      "outputs": []
+      "outputs": [],
+      "env": ["CONVERGENCE_RUNS", "FUZZ_RUNS"]
     },
     "test:coverage": {
       "outputs": ["coverage/**"]
@@ -17,6 +18,19 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "test:property": {
+      "outputs": [],
+      "env": ["CONVERGENCE_RUNS"]
+    },
+    "test:fuzz": {
+      "outputs": [],
+      "env": ["FUZZ_RUNS"]
+    },
+    "test:integration": {
+      "outputs": [],
+      "cache": false,
+      "env": ["DATABASE_URL", "REDIS_URL"]
     }
   }
 }

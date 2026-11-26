@@ -1,14 +1,16 @@
 import { defineConfig } from "vitest/config";
+import { integrationGlob, standardCoverage } from "../../vitest.shared.ts";
 
 export default defineConfig({
   test: {
     include: ["src/**/*.test.ts"],
-    testTimeout: 60_000,
+    exclude: [integrationGlob],
+    testTimeout: 120_000,
     coverage: {
       provider: "v8",
       include: ["src/**/*.ts"],
       exclude: ["src/**/*.test.ts", "src/bench.ts"],
-      thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
+      thresholds: standardCoverage,
     },
   },
 });
