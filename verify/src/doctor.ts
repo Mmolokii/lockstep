@@ -18,7 +18,10 @@ async function attempt(
   }
 }
 
-function command(cmd: string, args: string[]): string | null {
+/** Runs a command and returns trimmed stdout, or null if it fails. Injectable so tests never shell out. */
+export type CommandRunner = (cmd: string, args: string[]) => string | null;
+
+export const runCommand: CommandRunner = (cmd, args) => {
   try {
     return execFileSync(cmd, args, {
       encoding: "utf8",
@@ -28,9 +31,13 @@ function command(cmd: string, args: string[]): string | null {
   } catch {
     return null;
   }
-}
+};
 
-export async function doctor(config: Config, root: string): Promise<Check[]> {
+export async function doctor(
+  config: Config,
+  root: string,
+  command: CommandRunner = runCommand,
+): Promise<Check[]> {
   const checks: Check[] = [];
 
   const wantNode = Number(readFileSync(join(root, ".nvmrc"), "utf8").trim());
