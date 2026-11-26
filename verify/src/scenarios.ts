@@ -81,6 +81,19 @@ export const scenarios: readonly Scenario[] = [
     issue: 102,
     status: "pending",
   },
+  {
+    name: "smoke",
+    summary: "A deployed environment answers end to end (deploy gate)",
+    asserts: [
+      "GET SMOKE_WEB_URL returns 200 with the expected app shell",
+      "GET SMOKE_SYNC_URL/healthz and /readyz return 200",
+      "A WebSocket upgrade to SMOKE_SYNC_URL succeeds and a test room completes the two-step sync",
+      "The deployed release identifier matches the commit being deployed",
+    ],
+    requires: ["apps/sync", "apps/web"],
+    issue: 52,
+    status: "pending",
+  },
 ];
 
 export function findScenario(name: string): Scenario | undefined {
