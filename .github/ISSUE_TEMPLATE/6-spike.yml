@@ -1,0 +1,38 @@
+name: Spike
+description: A timeboxed investigation. The output is a decision, not production code.
+title: "Spike: "
+labels: ["type:spike"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question to answer
+      description: One question, specific enough that you'll know when it's answered.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it matters
+      description: What design or plan would change depending on the answer?
+    validations:
+      required: true
+  - type: dropdown
+    id: timebox
+    attributes:
+      label: Timebox
+      options:
+        - "2 hours"
+        - "Half a day"
+        - "1 day"
+        - "2 days (maximum)"
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Expected output
+      description: Where the answer will be written. A spike closes only when this exists. Any code written is thrown away.
+      placeholder: "Recommendation comment on this issue, then ADR NNNN"
+    validations:
+      required: true

@@ -1,0 +1,47 @@
+name: Reliability / Infra / Security / Observability
+description: Non-feature engineering work. Failure modes, limits, deploys, CI, environments, telemetry, hardening.
+title: ""
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      description: Set the matching type label after creating (type:reliability, type:infra, type:security, type:observability, type:perf).
+      options:
+        - Reliability (failure handling, limits, drain, chaos)
+        - Infrastructure (CI/CD, environments, deploys, build)
+        - Security (authN/Z, hardening, supply chain)
+        - Observability (metrics, logs, traces, alerts)
+        - Performance (latency, capacity, load tests)
+    validations:
+      required: true
+  - type: textarea
+    id: risk
+    attributes:
+      label: Risk or failure mode addressed
+      description: What goes wrong today, or could go wrong, without this? Who notices and how?
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: Proposed change
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: How it's verified
+      description: The test, drill or measurement that proves it works. Numbers need a command, its output and the machine spec.
+    validations:
+      required: true
+  - type: textarea
+    id: operability
+    attributes:
+      label: Operability
+      description: Metrics or alerts added, runbook section, rollback plan.
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      placeholder: "Blocked by #..."
