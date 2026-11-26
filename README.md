@@ -4,7 +4,8 @@ A real-time collaborative code editor in the browser: live cursors, offline edit
 
 Lockstep uses [Yjs](https://yjs.dev) as its CRDT and builds everything around it by hand: the sync server and wire protocol, persistence and compaction, per-message permissions, reconnection, horizontal scaling and observability. A built-in devtools panel shows what the sync layer is doing, and every performance number in these docs comes from a measured run.
 
-> **Status:** early development (M0, foundations). See [PROGRESS.md](PROGRESS.md).
+> [!WARNING]
+> **Under active development.** Lockstep isn't usable yet. Foundations, the CRDT lab and the delivery pipeline are in place; the editor and sync server are being built now (M2–M3). Progress: [PROGRESS.md](PROGRESS.md) · Board: [Lockstep project](https://github.com/users/Mmolokii/projects/5).
 
 ## Architecture
 
@@ -35,8 +36,16 @@ pnpm infra:up
 This starts Postgres (5432), Redis (6379), Prometheus (9090) and Grafana (3001), all bound to localhost.
 
 ```bash
-pnpm test
+pnpm verify doctor
 ```
+
+That checks Node, pnpm, Docker, Postgres, Redis and free ports. Then run the full CI gate locally:
+
+```bash
+pnpm ci:local
+```
+
+Contributors and AI agents: start with [AGENTS.md](AGENTS.md).
 
 ## Repository layout
 

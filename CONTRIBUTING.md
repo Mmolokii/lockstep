@@ -2,6 +2,8 @@
 
 Thanks for your interest. Lockstep is a portfolio project, but issues and PRs are welcome.
 
+**Start with [AGENTS.md](AGENTS.md)**: the exact setup, test and lint commands, the verify CLI, what tooling enforces, and the never-do list. It applies to humans and AI agents alike.
+
 ## Setup
 
 ```bash
@@ -17,10 +19,10 @@ Node 24 (see `.nvmrc`) and Docker are required.
 ## Before you open a PR
 
 ```bash
-pnpm typecheck && pnpm lint && pnpm test
+pnpm ci:local
 ```
 
-All three must pass. CI runs the same commands.
+It runs every CI step, in CI's order, against the local docker compose stack, and must pass.
 
 ## Conventions
 

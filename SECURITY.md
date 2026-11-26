@@ -32,3 +32,5 @@ Out of scope: denial of service through sheer traffic volume, and findings that 
 - Message size, document size and rate limits are enforced, and the protocol parser is fuzz-tested.
 - A strict Content Security Policy is applied, and dependencies are scanned (Dependabot, dependency review, CodeQL).
 - Message contents are never logged.
+
+A running record of controls, and the pre-launch OWASP review, is in [docs/security-review.md](docs/security-review.md).
