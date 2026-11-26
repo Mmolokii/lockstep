@@ -1,5 +1,10 @@
 name: CI
 
+# The PR gate. Every `run:` in the check job is a single-line command that
+# `pnpm ci:local` executes in the same order against docker compose, so CI
+# and local can't drift. Keep each `run:` on one line; ci:local refuses
+# multi-line commands. Steps marked `# ci-only` are skipped locally.
+
 on:
   pull_request:
   push:
@@ -16,7 +21,28 @@ jobs:
   check:
     name: Typecheck, lint, test, build
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
+    env:
+      DATABASE_URL: postgres://lockstep:lockstep@127.0.0.1:5432/lockstep
+      REDIS_URL: redis://127.0.0.1:6379
+      GITHUB_TOKEN: ${{ github.token }}
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: lockstep
+          POSTGRES_PASSWORD: lockstep
+          POSTGRES_DB: lockstep
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U lockstep -d lockstep"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+      redis:
+        image: redis:8-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 3s --health-retries 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -27,20 +53,44 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
 
-      - name: Install
+      - name: Install (frozen lockfile)
         run: pnpm install --frozen-lockfile
 
-      - name: Check Turborepo pipeline
+      - name: Pipeline contract (packages, coverage tiers, CI/compose images)
+        run: pnpm check:contract
+
+      - name: Turborepo task graph
         run: pnpm check:pipeline
 
       - name: Typecheck
         run: pnpm typecheck
 
-      - name: Lint
+      - name: Biome (warnings are errors)
         run: pnpm lint
 
-      - name: Test with coverage
+      - name: Unit, property and fuzz tests with coverage thresholds
         run: pnpm test:coverage
+
+      - name: Property tests, deep run (CRDT convergence)
+        run: CONVERGENCE_RUNS=10000 pnpm test:property
+
+      - name: Fuzz tests, deep run (malformed and truncated messages)
+        run: FUZZ_RUNS=20000 pnpm test:fuzz
+
+      - name: Environment reachable (Postgres, Redis)
+        run: pnpm verify doctor
+
+      - name: Integration tests (real WebSockets, Postgres, Redis)
+        run: pnpm test:integration
+
+      - name: Verify scenarios and registry
+        run: pnpm verify all
+
+      - name: Scenario registry (pending scenarios need open issues)
+        run: pnpm verify check-registry
 
       - name: Build
         run: pnpm build
+
+      - name: Bundle-size budgets
+        run: pnpm check:budgets
