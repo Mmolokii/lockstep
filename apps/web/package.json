@@ -1,0 +1,31 @@
+{
+  "name": "@lockstep/web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Lockstep web app: auth, projects and the editor UI",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port ${WEB_PORT:-3000}",
+    "build": "next build",
+    "start": "next start --port ${WEB_PORT:-3000}",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.5",
+    "@types/node": "^24.19.3",
+    "@types/react": "19.3.3",
+    "@types/react-dom": "19.3.0",
+    "@vitest/coverage-v8": "5.1.2",
+    "tailwindcss": "4.3.5",
+    "typescript": "7.0.2",
+    "vitest": "5.1.2"
+  }
+}

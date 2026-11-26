@@ -9,3 +9,6 @@ coverage/
 !.env.example
 .DS_Store
 *.log
+next-env.d.ts
+playwright-report/
+test-results/

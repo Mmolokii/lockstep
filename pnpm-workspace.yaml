@@ -2,3 +2,6 @@ packages:
   - "apps/*"
   - "packages/*"
   - "verify"
+  - "e2e"
+minimumReleaseAgeExclude:
+  - "@types/react@19.3.3"

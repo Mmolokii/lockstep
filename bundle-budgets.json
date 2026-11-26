@@ -5,7 +5,6 @@
       "name": "web: client JavaScript",
       "glob": "apps/web/.next/static/chunks/**/*.js",
       "maxKB": 350,
-      "pendingIssue": 25,
       "basis": "ADR 0004 measured CodeMirror 6 + Yjs at 209 KB gzip; the rest covers Next.js and React. Refine when #25 lands."
     },
     {
