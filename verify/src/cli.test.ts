@@ -2,9 +2,12 @@ import { spawnSync } from "node:child_process";
 import { createServer } from "node:net";
 import { describe, expect, it } from "vitest";
 import { loadConfig } from "./config.ts";
-import { doctor } from "./doctor.ts";
+import { type CommandRunner, doctor } from "./doctor.ts";
 
 const ROOT = new URL("../..", import.meta.url).pathname;
+// Unit tests never shell out to real pnpm or Docker: `docker info` alone can take seconds on CI runners.
+const fakeCommands: CommandRunner = (cmd) =>
+  cmd === "pnpm" ? "12.23.0" : cmd === "docker" ? "29.0.0" : null;
 const cli = (...args: string[]) =>
   spawnSync(process.execPath, ["verify/src/cli.ts", ...args], {
     cwd: ROOT,
@@ -68,7 +71,7 @@ describe("doctor", () => {
         redis: { host: "127.0.0.1", port: redis.port },
         ports: { "test port": 0 },
       };
-      const checks = await doctor(config, ROOT);
+      const checks = await doctor(config, ROOT, fakeCommands);
       const failedRequired = checks.filter((c) => !c.ok && !c.optional);
       expect(failedRequired, JSON.stringify(failedRequired)).toEqual([]);
       expect(checks.map((c) => c.name)).toEqual(
@@ -80,6 +83,21 @@ describe("doctor", () => {
     }
   });
 
+  it("treats a missing Docker as optional but a missing pnpm as required", async () => {
+    const config = {
+      ...loadConfig({}),
+      postgres: { host: "127.0.0.1", port: 1 },
+      redis: { host: "127.0.0.1", port: 1 },
+      ports: {},
+    };
+    const checks = await doctor(config, ROOT, () => null);
+    expect(checks.find((c) => c.name === "Docker daemon")?.optional).toBe(true);
+    expect(checks.find((c) => c.name === "pnpm version")).toMatchObject({
+      ok: false,
+      optional: false,
+    });
+  });
+
   it("fails when Postgres and Redis are unreachable", async () => {
     const config = {
       ...loadConfig({}),
@@ -87,7 +105,7 @@ describe("doctor", () => {
       redis: { host: "127.0.0.1", port: 1 },
       ports: {},
     };
-    const failedNames = (await doctor(config, ROOT))
+    const failedNames = (await doctor(config, ROOT, fakeCommands))
       .filter((c) => !c.ok && !c.optional)
       .map((c) => c.name);
     expect(failedNames).toEqual(expect.arrayContaining(["Postgres", "Redis"]));
