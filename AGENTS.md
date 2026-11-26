@@ -38,7 +38,8 @@ pnpm verify doctor
 | Property tests, deep run | `CONVERGENCE_RUNS=10000 pnpm test:property` |
 | Fuzz tests, deep run | `FUZZ_RUNS=20000 pnpm test:fuzz` |
 | Integration tests (needs `pnpm infra:up`) | `pnpm test:integration` |
-| End-to-end tests (needs `pnpm infra:up`) | `pnpm test:e2e` |
+| End-to-end tests (first run: `pnpm --filter @lockstep/e2e exec playwright install`) | `pnpm test:e2e` |
+| Web app, dev server | `pnpm --filter @lockstep/web dev` |
 | Build | `pnpm build` |
 | Pipeline contract | `pnpm check:contract` |
 | Turborepo graph, ci:local parser, migration and workflow rules | `pnpm check:pipeline` |
@@ -78,7 +79,9 @@ The runner checks preconditions, releases everything a scenario registers (pass,
 
 | Path | What |
 |---|---|
-| `apps/web`, `apps/sync` | Next.js app; WebSocket sync server *(arriving in M2, M3)* |
+| `apps/web` | Next.js app (App Router, Tailwind); baseline security headers in `src/lib/security-headers.ts` |
+| `apps/sync` | WebSocket sync server *(arriving in M3)* |
+| `e2e/` | Playwright suite on Chromium, Firefox and WebKit, against the production build |
 | `packages/protocol` | Wire format and close codes: the contract between client and server |
 | `packages/crdt-lab` | Toy CRDT and convergence harness (never imported by the app) |
 | `verify/` | Verification CLI |
