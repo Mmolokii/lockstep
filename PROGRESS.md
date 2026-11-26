@@ -53,6 +53,17 @@ _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 - CI doesn't run Postgres or Redis service containers yet. They're added in M4, when tests first need them.
 - `pnpm build` runs no tasks yet. No package has a build script until the apps arrive (M2, M3).
 
+## Delivery pipeline (Cycle 1)
+
+In review as stacked PRs, merged in order:
+- **#104**: ADRs 0004–0008. CodeMirror 6 chosen on measured bundle size (209 KB vs ~977 KB gzip for Monaco); 0006–0008 Proposed pending their RFCs
+- **#105**: `pnpm verify`. `doctor` is live; 5 scenarios pending (#100–#103, #52), guarded by `check-registry`
+- **#106**: staged `ci.yml`, pipeline contract, coverage tiers, bundle budgets, and `pnpm ci:local` mirroring CI exactly
+- **#107**: `security.yml`, `e2e.yml`, and `deploy.yml` with an expand-only migration gate
+- **This PR**: AGENTS.md, protocol (draft), runbook, feature map, branch protection, report placeholders
+
+**After merge:** apply [docs/branch-protection.md](docs/branch-protection.md) once every check has reported on `main`.
+
 ## Tech debt register
 
 Open `type:tech-debt` issues, by title. Each one is logged in the PR that takes the shortcut.
