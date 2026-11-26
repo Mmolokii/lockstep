@@ -19,6 +19,13 @@ test("responses carry the baseline security headers", async ({ request }) => {
   expect(headers["x-powered-by"]).toBeUndefined();
 });
 
+test("plain-HTTP builds send no HTTPS-only headers", async ({ request }) => {
+  // upgrade-insecure-requests over HTTP made WebKit fetch every script over HTTPS and fail.
+  const headers = (await request.get("/")).headers();
+  expect(headers["content-security-policy"]).not.toContain("upgrade-insecure-requests");
+  expect(headers["strict-transport-security"]).toBeUndefined();
+});
+
 test("the page loads without console errors (including CSP violations)", async ({ page }) => {
   const errors: string[] = [];
   page.on("console", (msg) => {
