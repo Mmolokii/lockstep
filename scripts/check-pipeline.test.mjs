@@ -41,7 +41,10 @@ describe("turbo.json", () => {
   it("typecheck and test don't wait for builds (packages export TS source)", () => {
     for (const name of ["typecheck", "test"]) {
       const deps = task(name).dependsOn ?? [];
-      assert.ok(!deps.includes("^build") && !deps.includes("build"), `${name} should not depend on build`);
+      assert.ok(
+        !deps.includes("^build") && !deps.includes("build"),
+        `${name} should not depend on build`,
+      );
     }
   });
 
@@ -56,10 +59,14 @@ describe("turbo.json", () => {
   });
 
   it("is accepted by turbo itself", () => {
-    const out = execFileSync("pnpm", ["exec", "turbo", "run", "build", "typecheck", "test", "--dry=json"], {
-      cwd: root,
-      encoding: "utf8",
-    });
+    const out = execFileSync(
+      "pnpm",
+      ["exec", "turbo", "run", "build", "typecheck", "test", "--dry=json"],
+      {
+        cwd: root,
+        encoding: "utf8",
+      },
+    );
     const plan = JSON.parse(out);
     assert.ok(plan.tasks.some((t) => t.taskId === "@lockstep/protocol#typecheck"));
   });
