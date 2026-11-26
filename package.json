@@ -26,7 +26,10 @@
     "test:integration": "turbo run test:integration",
     "check:budgets": "pnpm verify check-budgets",
     "check:contract": "pnpm verify check-contract",
-    "ci:local": "node scripts/ci-local.mjs"
+    "ci:local": "node scripts/ci-local.mjs",
+    "check:migrations": "node scripts/check-migrations.mjs",
+    "security:local": "pnpm audit --audit-level high && pnpm verify viewer-rejected --allow-pending && pnpm verify check-registry",
+    "test:e2e": "pnpm --filter @lockstep/e2e test:e2e"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.9",
