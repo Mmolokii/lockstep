@@ -54,6 +54,22 @@ describe("openLocalDoc", () => {
   });
 });
 
+describe("two tabs", () => {
+  it("share edits live while both are open", async () => {
+    const name = uniqueName();
+    const tab1 = openLocalDoc(name);
+    const tab2 = openLocalDoc(name);
+    await Promise.all([tab1.whenLoaded, tab2.whenLoaded]);
+    tab1.text.insert(0, "typed in tab 1");
+    const start = Date.now();
+    while (tab2.text.toString() !== "typed in tab 1") {
+      if (Date.now() - start > 2000) throw new Error("tab 2 never received the edit");
+      await new Promise((r) => setTimeout(r, 5));
+    }
+    await Promise.all([tab1.destroy(), tab2.destroy()]);
+  });
+});
+
 describe("storageName", () => {
   it("namespaces the database", () => {
     expect(storageName("scratch")).toBe("lockstep:scratch");
