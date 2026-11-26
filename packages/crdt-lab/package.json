@@ -1,0 +1,25 @@
+{
+  "name": "@lockstep/crdt-lab",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A toy sequence CRDT (RGA) with property-based convergence tests. Never used by the app.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "bench": "node src/bench.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.3",
+    "@vitest/coverage-v8": "5.1.2",
+    "fast-check": "4.11.0",
+    "typescript": "7.0.2",
+    "vitest": "5.1.2",
+    "yjs": "13.6.33"
+  }
+}

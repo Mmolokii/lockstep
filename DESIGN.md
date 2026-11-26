@@ -82,3 +82,4 @@ See [docs/adr/](docs/adr/).
 
 - [0001 Monorepo with pnpm and Turborepo](docs/adr/0001-monorepo-with-pnpm-and-turborepo.md)
 - [0002 Internal packages export TypeScript source](docs/adr/0002-internal-packages-as-typescript-source.md)
+- [0003 Use Yjs as the CRDT](docs/adr/0003-use-yjs-as-the-crdt.md)

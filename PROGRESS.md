@@ -1,13 +1,13 @@
 # Progress
 
-_Last updated: 2026-11-26_
+_Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 
 ## Milestones
 
 | Milestone | Status |
 |---|---|
-| M0 · Foundations | 🟡 In review (PR open) |
-| M1 · CRDT lab | ⚪ Not started |
+| M0 · Foundations | ✅ Done ([#1](https://github.com/Mmolokii/lockstep/pull/1)) |
+| M1 · CRDT lab | 🟡 In review (`feat/m1-crdt-lab`) |
 | M2 · Editor, local-first | ⚪ Not started |
 | M3 · Sync server v1 | ⚪ Not started |
 | M3.5 · Early deploy | ⚪ Not started |
@@ -17,7 +17,7 @@ _Last updated: 2026-11-26_
 | M7 · Scale and observability | ⚪ Not started |
 | M8 · Deploy, release, docs | ⚪ Not started |
 
-## M0 status
+## M0 status (done)
 
 **Done**
 - Spec reviewed. Amendments agreed and recorded in `docs/BUILD_PROMPT.md` §0
@@ -32,8 +32,17 @@ _Last updated: 2026-11-26_
 - Positioning bullets in `docs/prior-art.md`
 - Branch protection on `main` (requires CI), private vulnerability reporting, secret scanning push protection
 
-**Remaining**
-- Merge the M0 PR once CI is green
+- Merged in #1. All GitHub Actions are pinned to commit SHAs (CodeQL alert)
+
+## M1 status
+
+**Done**
+- `packages/crdt-lab`: RGA text CRDT (Lamport ids, origin-based inserts, tombstones, dedupe, causal buffering)
+- Convergence harness shared by RGA and Yjs: 2–5 replicas, 10–200 steps, out-of-order and duplicated delivery
+- 2,000 runs per implementation in CI. A 20,000-run sweep passed for both (Apple M4, 44 s)
+- A deliberately naive replica proves the property detects divergence
+- Benchmark toy vs Yjs, with results in ADR 0003 (Yjs ~4–10× faster; typing then deleting 10k chars leaves 24 bytes vs 1.6 MB)
+- ADR 0003: use Yjs as the CRDT
 
 ## Known issues
 
