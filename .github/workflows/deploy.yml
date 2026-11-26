@@ -1,0 +1,138 @@
+name: Deploy
+
+# On merge to main: expand-only migration check -> staging -> smoke tests ->
+# production. Staging and production use GitHub Environments, so production
+# can require approval and secrets are scoped per environment.
+#
+# Deploy jobs stay off until hosting exists (#49 hosting ADR, #50 Fly, #81
+# staging). Turn them on by setting the repository variable DEPLOY_ENABLED=true.
+# Smoke tests use `pnpm verify smoke`, which is pending until #52, so turning
+# deploys on before smoke tests are real fails the deploy. That's intended.
+#
+# Local: pnpm check:migrations --base origin/main
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  migrations:
+    name: Expand-only migration check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Check migrations changed in this push
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ]; then
+            node scripts/check-migrations.mjs --base "$BEFORE"
+          else
+            node scripts/check-migrations.mjs
+          fi
+
+  gate:
+    name: Deployment target configured
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      enabled: ${{ steps.check.outputs.enabled }}
+    steps:
+      - id: check
+        env:
+          DEPLOY_ENABLED: ${{ vars.DEPLOY_ENABLED }}
+        run: |
+          if [ "$DEPLOY_ENABLED" = "true" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Deploys are off::Hosting isn't set up yet (#49, #50, #81). Set the repository variable DEPLOY_ENABLED=true to turn deploys on."
+            echo "Deploys are off: hosting isn't set up yet (#49, #50, #81). Only the migration check ran." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  staging:
+    name: Deploy to staging
+    needs: [migrations, gate]
+    if: needs.gate.outputs.enabled == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: staging
+      url: ${{ vars.STAGING_WEB_URL }}
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - uses: superfly/flyctl-actions/setup-flyctl@fc53c09e1bc3be6f54706524e3b82c4f462f77be # 1.5
+      - run: pnpm install --frozen-lockfile
+      - name: Run migrations (expand-only, checked above)
+        run: pnpm --filter @lockstep/db migrate
+      - name: Deploy sync (rolling; old machines drain with 1012)
+        run: flyctl deploy --config infra/fly/sync.staging.toml --strategy rolling --wait-timeout 300
+      - name: Deploy web
+        run: pnpm dlx vercel@67.0.0 deploy --prebuilt=false --token "$VERCEL_TOKEN" --yes
+      - name: Smoke tests against staging
+        env:
+          SMOKE_WEB_URL: ${{ vars.STAGING_WEB_URL }}
+          SMOKE_SYNC_URL: ${{ vars.STAGING_SYNC_URL }}
+        run: pnpm verify smoke
+
+  production:
+    name: Deploy to production
+    needs: staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: production
+      url: ${{ vars.PRODUCTION_WEB_URL }}
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - uses: superfly/flyctl-actions/setup-flyctl@fc53c09e1bc3be6f54706524e3b82c4f462f77be # 1.5
+      - run: pnpm install --frozen-lockfile
+      - name: Run migrations (expand-only, checked above)
+        run: pnpm --filter @lockstep/db migrate
+      - name: Deploy sync (rolling; old machines drain with 1012)
+        run: flyctl deploy --config infra/fly/sync.production.toml --strategy rolling --wait-timeout 300
+      - name: Deploy web
+        run: pnpm dlx vercel@67.0.0 deploy --prod --token "$VERCEL_TOKEN" --yes
+      - name: Smoke tests against production
+        env:
+          SMOKE_WEB_URL: ${{ vars.PRODUCTION_WEB_URL }}
+          SMOKE_SYNC_URL: ${{ vars.PRODUCTION_SYNC_URL }}
+        run: pnpm verify smoke
