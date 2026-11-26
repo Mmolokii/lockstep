@@ -1,0 +1,22 @@
+{
+  "name": "@lockstep/verify",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Verification CLI: environment doctor and end-to-end scenarios against real processes",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "lockstep-verify": "./src/cli.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.3",
+    "@vitest/coverage-v8": "5.1.2",
+    "typescript": "7.0.2",
+    "vitest": "5.1.2"
+  }
+}
