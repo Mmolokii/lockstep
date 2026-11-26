@@ -1,0 +1,22 @@
+{
+  "name": "@lockstep/protocol",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Lockstep wire protocol: message encoding, close codes, shared types",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.3",
+    "@vitest/coverage-v8": "5.1.2",
+    "typescript": "7.0.2",
+    "vitest": "5.1.2"
+  }
+}
