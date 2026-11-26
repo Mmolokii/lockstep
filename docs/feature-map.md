@@ -28,7 +28,8 @@ Every v1 feature: how a user reaches it, how to drive it without a browser, its 
 
 | Feature | How a user reaches it | Drive it | Status | Known traps |
 |---|---|---|---|---|
-| Code editor (~10 languages, themes, shortcuts) | Open any file | e2e *(M2)* | ⚪ M2 | Language is chosen by file extension; unknown extensions are plain text. |
+| Code editor (~10 languages, themes, shortcuts) | `/scratch` (files from M6a) | `packages/editor` unit tests; e2e `scratch.spec.ts` | ✅ M2 | Language is chosen by file extension; unknown extensions are plain text. Each grammar is a lazy chunk: offline before it has loaded, the file shows as plain text. Escape then Tab leaves the editor. |
+| Local persistence (reload, offline) | `/scratch`: type, reload, or go offline | e2e `scratch.spec.ts` (reload; offline edit then reload) | ✅ M2 | Stored per origin and per browser profile (IndexedDB). An offline *reload* needs a service worker, which isn't planned for v1; editing in an already-open page works offline. |
 | Collaborative file tree | Sidebar: new, rename, move, delete | e2e *(M6a)*; property test (#85) | ⚪ M6a | Content is keyed by file ID, not path: a rename touches only the tree doc. Rename-versus-delete races follow ADR 0011. |
 | Live cursors and selections | Visible when others are in the file | e2e *(M6a)* | ⚪ M6a | Every cursor shows colour **and** name; never colour alone (accessibility). |
 | Presence bar | Avatars in the header | e2e + axe *(M6a)* | ⚪ M6a | Awareness is ephemeral and never persisted; a reload drops and re-adds presence. |
