@@ -36,7 +36,7 @@
 ## Document model
 
 - One **Y.Doc per file** (a `Y.Text`), plus one **project Y.Doc** holding the file tree as a `Y.Map` of path to metadata.
-- Why per file: a room only loads what someone has open, so memory per room stays bounded. The cost is that changes across several files aren't atomic. _ADR planned (M2)._
+- Why per file: a room only loads what someone has open, so memory per room stays bounded. The cost is that changes across several files aren't atomic. See [ADR 0005](docs/adr/0005-one-ydoc-per-file-plus-tree-doc.md).
 
 ## The life of a keystroke (_planned_, filled in as M2–M7 land)
 
@@ -83,3 +83,8 @@ See [docs/adr/](docs/adr/).
 - [0001 Monorepo with pnpm and Turborepo](docs/adr/0001-monorepo-with-pnpm-and-turborepo.md)
 - [0002 Internal packages export TypeScript source](docs/adr/0002-internal-packages-as-typescript-source.md)
 - [0003 Use Yjs as the CRDT](docs/adr/0003-use-yjs-as-the-crdt.md)
+- [0004 Use CodeMirror 6 as the editor](docs/adr/0004-codemirror-6-over-monaco.md)
+- [0005 One Y.Doc per file, plus a tree doc](docs/adr/0005-one-ydoc-per-file-plus-tree-doc.md)
+- [0006 Room tokens in the first socket message](docs/adr/0006-room-token-auth-for-sockets.md) _(Proposed)_
+- [0007 Redis pub/sub fan-out with a single writer](docs/adr/0007-redis-pubsub-fan-out-with-single-writer.md) _(Proposed)_
+- [0008 Update log with snapshots](docs/adr/0008-update-log-persistence-with-snapshots.md) _(Proposed)_

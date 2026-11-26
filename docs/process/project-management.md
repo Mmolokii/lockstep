@@ -366,7 +366,7 @@ Columns: **Type** · **Area** · **P**riority · **S**ize · **R**isk.
 | M3-07 | Backpressure on `bufferedAmount` | E11 | reliability | sync-server | P1 | S | M | A slow-consumer test shows disconnect at threshold, and memory stays bounded |
 | M3-08 | Server heartbeats and dead-connection reaping | E11 | reliability | sync-server | P1 | S | L | Half-open sockets are closed within the configured interval |
 | M3-09 | Graceful drain on SIGTERM (close 1012 within budget) | E11 | reliability | sync-server | P1 | S | M | Test: SIGTERM stops accepting, closes clients with 1012, exits within budget |
-| M3-10 | Health endpoints + ADR 0006: readiness ignores shared dependencies | E11 | reliability | sync-server | P1 | S | M | `/healthz`, `/readyz` (false only when draining); ADR merged. `needs-adr` |
+| M3-10 | Health endpoints + ADR 0009: readiness ignores shared dependencies | E11 | reliability | sync-server | P1 | S | M | `/healthz`, `/readyz` (false only when draining); ADR merged. `needs-adr` |
 | M3-11 | Structured JSON logs with connection IDs, no contents | E10 | observability | sync-server, observability | P1 | S | L | A test asserts no payload bytes appear in logs |
 | M3-12 | Prometheus `/metrics` baseline | E10 | observability | sync-server, observability | P1 | M | L | Connections, rooms, messages and bytes by type, rejects by reason, event-loop lag; scraped by local Prometheus |
 | M3-13 | sync-client state machine with honest status and pending count | E4 | feature | sync-client | P1 | M | M | `synced` only after an ack covers local updates; unit tests with a fake socket |
@@ -381,7 +381,7 @@ Columns: **Type** · **Area** · **P**riority · **S**ize · **R**isk.
 
 | ID | Title | Epic | Type | Area | P | S | R | Acceptance criteria |
 |---|---|---|---|---|---|---|---|---|
-| M35-01 | ADR 0007: hosting (why sync isn't serverless; Fly region; cost estimate) | E13 | docs | infra, docs | P1 | S | M | Merged; region and machine size chosen. `user-decision` (accounts, spend) |
+| M35-01 | ADR 0010: hosting (why sync isn't serverless; Fly region; cost estimate) | E13 | docs | infra, docs | P1 | S | M | Merged; region and machine size chosen. `user-decision` (accounts, spend) |
 | M35-02 | Deploy sync to Fly: `fly.toml`, health checks, WebSocket idle timeouts | E13 | infra | infra | P1 | M | **H** | `wss://` reachable; health checks gate rollout |
 | M35-03 | Deploy web to Vercel with env config and preview deploys | E13 | infra | infra, web | P1 | S | L | Production and preview URLs work |
 | M35-04 | `deploy.yml`: deploy on merge to main, rolling sync deploys, short-lived credentials | E13 | infra | ci-cd | P1 | M | M | A merge to main deploys both apps; no long-lived deploy keys where OIDC exists |
@@ -405,7 +405,7 @@ Columns: **Type** · **Area** · **P**riority · **S**ize · **R**isk.
 | M4-08 | Postgres-unavailable behaviour: bounded buffer, refuse new rooms, alert metric | E11 | reliability | persistence, sync-server | P1 | M | M | Test with Postgres stopped: open rooms keep working, new rooms refused, flush on recovery |
 | M4-09 | Crash-before-flush recovery test | E11 | reliability | persistence, sync-client | P1 | M | M | Kill -9 before flush; the client's reconnect restores the state; asserted in a test |
 | M4-10 | Persistence metrics: flush latency, backlog, compaction duration | E10 | observability | observability | P1 | S | L | Exposed and scraped |
-| M4-11 | ADR 0008: durability trade-off of batched writes | E6 | docs | persistence, docs | P1 | XS | L | Merged |
+| M4-11 | Accept ADR 0008 (update log, batching, durability trade-off) | E6 | docs | persistence, docs | P1 | XS | L | Status moved to Accepted after RFC 0002 |
 
 ### M5 · Access control
 
@@ -414,7 +414,7 @@ Columns: **Type** · **Area** · **P**riority · **S**ize · **R**isk.
 | M5-01 | RFC 0003: auth and access model + STRIDE threat model v1 | E5 | docs | auth | P1 | M | **H** | Merged: tokens, roles, share links, revocation channel, audit scope. `needs-rfc` `security-sensitive` |
 | M5-02 | GitHub OAuth with better-auth; sessions in Postgres | E5 | feature | auth, web | P1 | M | M | Sign in and out works; cookies `HttpOnly`, `Secure`, `SameSite` |
 | M5-03 | Projects and members; dashboard | E5 | feature | web | P1 | M | L | Create, list and open projects; membership enforced server-side |
-| M5-04 | Room token endpoint with EdDSA signing + ADR 0009 | E5 | security | auth | P1 | M | M | 5-minute token with room and role; the sync server needs only the public key; key rotation documented. `needs-adr` |
+| M5-04 | Room token endpoint with EdDSA signing; accept ADR 0006 | E5 | security | auth | P1 | M | M | 5-minute token with room and role; the sync server needs only the public key; key rotation documented. `needs-adr` |
 | M5-05 | Socket auth: `auth` within 5 s, verify signature, expiry, room and role | E5 | security | sync-server, auth | P1 | S | M | Tests for missing, expired, wrong-room and forged tokens → 4401 / 4403 |
 | M5-06 | Per-message authorisation incl. sync step 2; raw-message viewer tests | E5 | security | sync-server, auth | P1 | M | **H** | Raw viewer update and step-2 messages are rejected (4403) and never applied |
 | M5-07 | sync-client token fetch and refresh before expiry; 4401 recovery | E4 | feature | sync-client | P1 | S | L | Long session crosses token expiry without user impact |
@@ -430,9 +430,9 @@ Columns: **Type** · **Area** · **P**riority · **S**ize · **R**isk.
 
 | ID | Title | Epic | Type | Area | P | S | R | Acceptance criteria |
 |---|---|---|---|---|---|---|---|---|
-| M6-01 | ADR 0010: file-tree conflict rules (rename vs delete, concurrent moves) | E7 | docs | collab-ux, docs | P1 | S | M | Deterministic rules with examples. `needs-adr` |
+| M6-01 | ADR 0011: file-tree conflict rules (rename vs delete, concurrent moves) | E7 | docs | collab-ux, docs | P1 | S | M | Deterministic rules with examples. `needs-adr` |
 | M6-02 | Collaborative file tree: create and delete | E7 | feature | collab-ux | P1 | M | M | Two users see tree changes live; paths validated |
-| M6-03 | Collaborative file tree: rename and move per ADR 0010 | E7 | feature | collab-ux | P1 | M | M | Property test of concurrent rename/delete matches the ADR |
+| M6-03 | Collaborative file tree: rename and move per ADR 0011 | E7 | feature | collab-ux | P1 | M | M | Property test of concurrent rename/delete matches ADR 0011 |
 | M6-04 | Remote cursors and selections with names and colours; idle fade | E7 | feature | collab-ux | P1 | M | L | Colour plus name (never colour alone) |
 | M6-05 | Presence bar with screen-reader labels | E7 | feature | collab-ux | P1 | S | L | axe has no violations on the component |
 | M6-06 | Sync status indicator driven by sync-client state | E7 | feature | collab-ux | P1 | S | L | Shows synced, saving, offline (N), reconnecting, error; matches the ack-based truth in tests |
