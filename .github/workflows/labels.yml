@@ -1,0 +1,52 @@
+name: Labels
+
+# Keeps repository labels in sync with .github/labels.json.
+# Creates or updates every listed label, and deletes only the names listed
+# under "remove". Labels not mentioned in the file are left alone.
+
+on:
+  push:
+    branches: [main]
+    paths: [.github/labels.json]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: labels
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Create or update labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          jq -c '.labels[]' .github/labels.json | while read -r label; do
+            name=$(jq -r '.name' <<<"$label")
+            gh label create "$name" --repo "$REPO" --force \
+              --color "$(jq -r '.color' <<<"$label")" \
+              --description "$(jq -r '.description' <<<"$label")"
+          done
+
+      - name: Remove retired labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          existing=$(gh label list --repo "$REPO" --limit 200 --json name --jq '.[].name')
+          jq -r '.remove[]' .github/labels.json | while read -r name; do
+            if grep -Fxq "$name" <<<"$existing"; then
+              gh label delete "$name" --repo "$REPO" --yes
+            fi
+          done

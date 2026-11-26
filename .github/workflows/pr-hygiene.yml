@@ -1,0 +1,46 @@
+name: PR hygiene
+
+# Enforces two rules from docs/process/project-management.md:
+#   1. PR titles are conventional commits (they become the squash-merge commit).
+#   2. Every PR closes an issue, unless it's labelled `no-issue` or opened by a bot.
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+jobs:
+  hygiene:
+    name: Conventional title and linked issue
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Check title and linked issue
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+          BODY: ${{ github.event.pull_request.body }}
+          AUTHOR_TYPE: ${{ github.event.pull_request.user.type }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          status=0
+          pattern='^(feat|fix|docs|chore|refactor|perf|test|ci|build|style|revert)(\([a-z0-9-]+\))?!?: .+'
+          if [[ "$TITLE" =~ $pattern ]]; then
+            echo "✓ Title is a conventional commit"
+          else
+            echo "::error::PR title must be a conventional commit, e.g. 'feat(sync-server): add ack message'. Got: $TITLE"
+            status=1
+          fi
+
+          if [[ "$AUTHOR_TYPE" == "Bot" ]]; then
+            echo "✓ Opened by a bot; linked issue not required"
+          elif [[ ",$LABELS," == *",no-issue,"* ]]; then
+            echo "✓ Labelled no-issue; linked issue not required"
+          elif grep -Eiq '(close[sd]?|fix(e[sd])?|resolve[sd]?) +#[0-9]+' <<<"$BODY"; then
+            echo "✓ Closes an issue"
+          else
+            echo "::error::PR body must close an issue ('Closes #123'), or the PR must be labelled no-issue."
+            status=1
+          fi
+          exit $status
