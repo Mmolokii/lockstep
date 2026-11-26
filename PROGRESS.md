@@ -10,7 +10,7 @@ _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 |---|---|
 | M0 · Foundations | ✅ Done ([#1](https://github.com/Mmolokii/lockstep/pull/1)) |
 | M1 · CRDT lab | ✅ Done ([#2](https://github.com/Mmolokii/lockstep/pull/2)) |
-| M2 · Local-first editor | 🔵 Next: Cycle 1 (from 2026-11-30) |
+| M2 · Local-first editor | 🟡 In progress |
 | M3 · Sync server v1 | ⚪ Not started |
 | M3.5 · First deploy | ⚪ Not started |
 | M4 · Persistence | ⚪ Not started |
@@ -48,10 +48,17 @@ _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 - Benchmark toy vs Yjs, with results in ADR 0003 (Yjs ~4–10× faster; typing then deleting 10k chars leaves 24 bytes vs 1.6 MB)
 - ADR 0003: use Yjs as the CRDT
 
+## M2 status (in progress)
+
+**Done**
+- **#112** (closes #25): Next.js 16 shell with baseline security headers; Playwright on Chromium, Firefox and WebKit against the production build; web bundle budget enforced (170 KB of 350 KB gzip). The e2e suite caught `upgrade-insecure-requests` blanking WebKit over plain HTTP on its first run
+- **#26** (in review): `packages/editor`, CodeMirror 6 bound to a Y.Text. 14 languages, each a lazy chunk; light and dark themes; Yjs-scoped undo; keyboard-only use. 35 tests, 100% coverage
+
+**Next:** #27 IndexedDB persistence, #28 cross-tab sync, #29 e2e two tabs plus reload. The editor enters the web bundle with #27. The budget sums every chunk, lazy ones included, so expect it to be revisited with measurements then
+
 ## Known issues
 
-- CI doesn't run Postgres or Redis service containers yet. They're added in M4, when tests first need them.
-- `pnpm build` runs no tasks yet. No package has a build script until the apps arrive (M2, M3).
+- The Vercel preview build fails until the project's Root Directory is set to `apps/web` (Vercel settings). It isn't a required check
 
 ## Delivery pipeline (Cycle 1): merged
 
@@ -60,7 +67,7 @@ _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 - **#107**: staged CI gate, pipeline contract, coverage tiers, bundle budgets, `ci:local`, security, e2e and deploy workflows (includes #106, auto-closed when its base branch was deleted)
 - **#108**: AGENTS.md, protocol draft, runbook, feature map, report placeholders
 - `main` is protected by a repository ruleset: 9 required checks, up to date, squash only, no bypass. Verified with the API in [docs/branch-protection.md](docs/branch-protection.md)
-- **#109** (in review): adopts the useful parts of the review drafts (teardown, preconditions and seeds enforced by the verify runner) and records what was rejected
+- **#110** (closes #109): adopts the useful parts of the review drafts (teardown, preconditions and seeds enforced by the verify runner) and records what was rejected
 
 **Hosting decided** ([ADR 0010](docs/adr/0010-hosting-fly-johannesburg.md)): Fly.io in Johannesburg for sync and Redis, Vercel for web, Neon in Frankfurt. Accounts are created just in time: Vercel with `apps/web` (M2), Fly and Sentry at M3.5, Neon at M4.
 

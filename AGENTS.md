@@ -83,6 +83,7 @@ The runner checks preconditions, releases everything a scenario registers (pass,
 | `apps/sync` | WebSocket sync server *(arriving in M3)* |
 | `e2e/` | Playwright suite on Chromium, Firefox and WebKit, against the production build |
 | `packages/protocol` | Wire format and close codes: the contract between client and server |
+| `packages/editor` | CodeMirror 6 bound to a Y.Text: languages (lazy), themes, keyboard map |
 | `packages/crdt-lab` | Toy CRDT and convergence harness (never imported by the app) |
 | `verify/` | Verification CLI |
 | `infra/` | Docker Compose, Prometheus, Grafana |
