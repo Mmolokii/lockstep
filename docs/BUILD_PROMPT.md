@@ -37,7 +37,7 @@ These override anything below that disagrees with them. Each is also folded into
 6. **Browser wording.** Playwright covers Chromium, Firefox, WebKit (a stand-in for Safari, not Safari itself) and Edge via its install channel. We don't claim "latest two versions".
 7. **Deploy early, and a cut line.** A basic Fly deploy of the sync server lands right after M3 (milestone **M3.5**), to surface proxy, TLS and idle-timeout problems early. The demoable core is **M0–M5 + minimal M6 + deploy**; everything else is built on top of that.
 8. **Latency definition.** p95 propagation is measured with headless harness clients in the same region as the sync server. Reports state separately whether CodeMirror render time is included.
-9. **Node 24**, a **public** repo (so branch protection works on a free plan), **Neon** for Postgres, Redis provider decided in M7.
+9. **Node 24**, a **public** repo (so branch protection works on a free plan), **Neon** for Postgres. Hosting decided 2026-11-26 in [ADR 0010](adr/0010-hosting-fly-johannesburg.md): Fly.io in Johannesburg for sync and Redis 8, Vercel for web, Neon in Frankfurt.
 
 ---
 

@@ -62,7 +62,7 @@ _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 - `main` is protected by a repository ruleset: 9 required checks, up to date, squash only, no bypass. Verified with the API in [docs/branch-protection.md](docs/branch-protection.md)
 - **#109** (in review): adopts the useful parts of the review drafts (teardown, preconditions and seeds enforced by the verify runner) and records what was rejected
 
-**Open decisions for you:** hosting provider and accounts for M3.5 (#49), which turns deploys on.
+**Hosting decided** ([ADR 0010](docs/adr/0010-hosting-fly-johannesburg.md)): Fly.io in Johannesburg for sync and Redis, Vercel for web, Neon in Frankfurt. Accounts are created just in time: Vercel with `apps/web` (M2), Fly and Sentry at M3.5, Neon at M4.
 
 ## Tech debt register
 
@@ -73,7 +73,6 @@ _None yet._
 ## Decisions pending
 
 - Domain (M8). Candidates: `lockstepcode.dev`, `uselockstep.dev`
-- Redis provider (M7)
 - Bundling the sync server for production: esbuild (M3)
 
 ## User feedback

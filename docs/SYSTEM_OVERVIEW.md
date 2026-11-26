@@ -160,7 +160,7 @@ What happens when Alice types `x` and Bob sees it:
 | Auth | better-auth (GitHub OAuth), signed short-lived room tokens |
 | Data | PostgreSQL + Drizzle ORM, Redis (pub/sub) |
 | Validation | Zod at every API boundary |
-| Hosting | Vercel (web), Fly.io (sync), Neon Postgres, managed Redis (provider decided in M7) |
+| Hosting | Vercel (web), Fly.io in Johannesburg (sync + Redis 8), Neon Postgres in Frankfurt ([ADR 0010](adr/0010-hosting-fly-johannesburg.md)) |
 | Observability | OpenTelemetry, Prometheus, Grafana, Sentry, structured JSON logs |
 | Testing | Vitest, fast-check, Playwright, k6 |
 | Tooling | pnpm workspaces, Turborepo, Biome |

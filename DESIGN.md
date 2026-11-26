@@ -27,7 +27,7 @@
 | Component | Responsibility | Runs on |
 |---|---|---|
 | `apps/web` | Auth (GitHub), projects, members, share links, room tokens, UI | Vercel |
-| `apps/sync` | Rooms, sync protocol, per-message authorisation, persistence, fan-out | Fly.io (long-lived processes) |
+| `apps/sync` | Rooms, sync protocol, per-message authorisation, persistence, fan-out | Fly.io, Johannesburg (long-lived processes) |
 | `packages/protocol` | Message encoding, close codes, shared types | Both ends of the socket |
 | `packages/sync-client` | Connection, auth, reconnection, offline, truthful status | Browser |
 | `packages/editor` | CodeMirror + Yjs binding, cursors, presence, devtools | Browser |
@@ -88,3 +88,4 @@ See [docs/adr/](docs/adr/).
 - [0006 Room tokens in the first socket message](docs/adr/0006-room-token-auth-for-sockets.md) _(Proposed)_
 - [0007 Redis pub/sub fan-out with a single writer](docs/adr/0007-redis-pubsub-fan-out-with-single-writer.md) _(Proposed)_
 - [0008 Update log with snapshots](docs/adr/0008-update-log-persistence-with-snapshots.md) _(Proposed)_
+- [0010 Hosting: Fly.io in Johannesburg, Vercel, Neon in Frankfurt](docs/adr/0010-hosting-fly-johannesburg.md)
