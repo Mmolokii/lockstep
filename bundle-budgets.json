@@ -1,0 +1,19 @@
+{
+  "$comment": "Enforced by `pnpm verify check-budgets` after `pnpm build`. Sizes are gzip -9 sums of every matched file. A budget whose files don't exist yet must name the open issue that will create them.",
+  "budgets": [
+    {
+      "name": "web: client JavaScript",
+      "glob": "apps/web/.next/static/chunks/**/*.js",
+      "maxKB": 350,
+      "pendingIssue": 25,
+      "basis": "ADR 0004 measured CodeMirror 6 + Yjs at 209 KB gzip; the rest covers Next.js and React. Refine when #25 lands."
+    },
+    {
+      "name": "sync: server bundle",
+      "glob": "apps/sync/dist/**/*.js",
+      "maxKB": 400,
+      "pendingIssue": 47,
+      "basis": "esbuild bundle of the sync server (#47). Guards against accidentally bundling heavy dependencies."
+    }
+  ]
+}

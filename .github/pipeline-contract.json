@@ -1,0 +1,56 @@
+{
+  "$comment": "Enforced by `pnpm verify check-contract`. Every workspace package must be listed. Rules for a path apply as soon as it exists.",
+  "packages": {
+    "packages/protocol": {
+      "coverage": "critical",
+      "scripts": ["typecheck", "test", "test:coverage"]
+    },
+    "packages/sync-client": {
+      "coverage": "critical",
+      "scripts": ["typecheck", "test", "test:coverage"]
+    },
+    "apps/sync": {
+      "coverage": "critical",
+      "scripts": ["typecheck", "test", "test:coverage", "test:integration", "build"]
+    },
+    "apps/web": {
+      "coverage": "standard",
+      "scripts": ["typecheck", "test", "test:coverage", "build"],
+      "requiresPaths": ["e2e/package.json"]
+    },
+    "packages/editor": {
+      "coverage": "standard",
+      "scripts": ["typecheck", "test", "test:coverage"]
+    },
+    "packages/db": {
+      "coverage": "standard",
+      "scripts": ["typecheck", "test", "test:coverage", "test:integration"]
+    },
+    "packages/crdt-lab": {
+      "coverage": "standard",
+      "scripts": ["typecheck", "test", "test:coverage", "test:property"]
+    },
+    "verify": {
+      "coverage": "standard",
+      "scripts": ["typecheck", "test", "test:coverage"]
+    },
+    "e2e": {
+      "coverage": "none",
+      "scripts": ["typecheck", "test:e2e"]
+    }
+  },
+  "pending": [
+    {
+      "path": "packages/protocol",
+      "script": "test:fuzz",
+      "issue": 32,
+      "reason": "Protocol fuzz suite arrives with the decoder"
+    }
+  ],
+  "sameImages": {
+    "$comment": "CI service containers must run the same images as local docker compose.",
+    "workflow": ".github/workflows/ci.yml",
+    "compose": "infra/docker-compose.yml",
+    "services": ["postgres", "redis"]
+  }
+}

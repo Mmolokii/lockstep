@@ -4,7 +4,9 @@
 import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { checkBudgets, loadBudgets } from "./budgets.ts";
 import { loadConfig } from "./config.ts";
+import { checkContract, loadContract } from "./contract.ts";
 import { doctor } from "./doctor.ts";
 import { checkRegistry, githubIssueLookup } from "./registry.ts";
 import {
@@ -27,9 +29,11 @@ Commands:
   <scenario>             Run one scenario (${scenarios.map((s) => s.name).join(", ")})
   all                    Run every active scenario; report pending ones
   check-registry         Validate the scenario registry (pending scenarios must have open issues)
+  check-contract         Enforce .github/pipeline-contract.json (scripts, coverage tiers, CI/compose images)
+  check-budgets          Enforce bundle-budgets.json against built output (run after pnpm build)
 
 Options:
-  --offline              check-registry: skip the GitHub issue-state lookup (local only; CI never skips)
+  --offline              check-*: skip GitHub issue-state lookups (local only; CI never skips)
 
 Exit codes: 0 pass · 1 fail · 2 pending`;
 
@@ -86,6 +90,25 @@ async function main(argv: string[]): Promise<number> {
     print("verify check-registry", checks);
     const outcome = outcomeOf(checks);
     console.log(formatOutcome("check-registry", outcome));
+    return ExitCode[outcome];
+  }
+
+  const gated: Record<string, () => Promise<Check[]>> = {
+    "check-contract": async () =>
+      checkContract(
+        ROOT,
+        loadContract(ROOT),
+        offline ? null : githubIssueLookup(loadConfig().repo),
+      ),
+    "check-budgets": async () =>
+      checkBudgets(ROOT, loadBudgets(ROOT), offline ? null : githubIssueLookup(loadConfig().repo)),
+  };
+  const gate = gated[command];
+  if (gate) {
+    const checks = await gate();
+    print(`verify ${command}`, checks);
+    const outcome = outcomeOf(checks);
+    console.log(formatOutcome(command, outcome));
     return ExitCode[outcome];
   }
 
