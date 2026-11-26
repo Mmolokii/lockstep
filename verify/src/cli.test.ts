@@ -30,7 +30,13 @@ describe("verify CLI exit codes", () => {
   it("all exits 0 when nothing active fails, and counts pending scenarios", () => {
     const r = cli("all");
     expect(r.status).toBe(0);
-    expect(r.stdout).toMatch(/0 failed, 4 pending/);
+    expect(r.stdout).toMatch(/0 failed, 5 pending/);
+  });
+
+  it("--allow-pending turns pending into exit 0 with a visible notice", () => {
+    const r = cli("viewer-rejected", "--allow-pending");
+    expect(r.status).toBe(0);
+    expect(r.stdout).toContain("::notice title=verify viewer-rejected is pending::");
   });
 
   it("an unknown command exits 1", () => {

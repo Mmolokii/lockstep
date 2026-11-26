@@ -34,6 +34,8 @@ Commands:
 
 Options:
   --offline              check-*: skip GitHub issue-state lookups (local only; CI never skips)
+  --allow-pending        <scenario>: exit 0 instead of 2 when pending, with a CI notice. Only safe
+                         where check-registry also runs (it fails if the tracking issue is closed)
 
 Exit codes: 0 pass · 1 fail · 2 pending`;
 
@@ -63,6 +65,7 @@ async function runScenario(s: Scenario): Promise<Outcome> {
 async function main(argv: string[]): Promise<number> {
   const [command, ...rest] = argv;
   const offline = rest.includes("--offline");
+  const allowPending = rest.includes("--allow-pending");
   if (existsSync(join(ROOT, ".env"))) process.loadEnvFile(join(ROOT, ".env"));
 
   if (!command || command === "help" || command === "--help") {
@@ -131,6 +134,13 @@ async function main(argv: string[]): Promise<number> {
   }
   const outcome = await runScenario(scenario);
   console.log(formatOutcome(scenario.name, outcome));
+  if (outcome === "pending" && allowPending) {
+    // GitHub Actions renders this as a visible annotation on the run.
+    console.log(
+      `::notice title=verify ${scenario.name} is pending::Tracked in #${scenario.issue}; enforced by check-registry.`,
+    );
+    return ExitCode.pass;
+  }
   return ExitCode[outcome];
 }
 
