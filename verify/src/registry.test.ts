@@ -125,9 +125,8 @@ describe("githubIssueLookup", () => {
     try {
       expect(await githubIssueLookup("o/r", "t0ken")(7)).toBe("closed");
       expect(calls[0]?.url).toBe("https://api.github.com/repos/o/r/issues/7");
-      expect((calls[0]?.init?.headers as Record<string, string>).authorization).toBe(
-        "Bearer t0ken",
-      );
+      const headers = (calls[0]?.init?.headers ?? {}) as Record<string, string>;
+      expect(headers.authorization).toBe("Bearer t0ken");
     } finally {
       vi.unstubAllGlobals();
     }
