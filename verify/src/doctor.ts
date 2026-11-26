@@ -109,3 +109,13 @@ export async function doctor(
 
   return checks;
 }
+
+/** The doctor checks an active scenario needs before it starts: Node, Postgres and Redis. */
+export async function preflight(
+  config: Config,
+  root: string,
+  command: CommandRunner = runCommand,
+): Promise<Check[]> {
+  const keep = new Set(["Node version", "Postgres", "Redis"]);
+  return (await doctor(config, root, command)).filter((c) => keep.has(c.name));
+}

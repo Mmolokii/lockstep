@@ -1,5 +1,20 @@
 import type { Config } from "./config.ts";
 import type { Check } from "./report.ts";
+import type { Teardown } from "./teardown.ts";
+
+/**
+ * What the runner hands an active scenario. The runner owns preconditions,
+ * teardown and seeding (see runner.ts), so a scenario can't skip them.
+ */
+export interface ScenarioContext {
+  readonly config: Config;
+  /** Register every process, socket and temp dir the moment it exists; the runner releases all of them, pass or fail. */
+  readonly teardown: Teardown;
+  /** Printed on every run. Replay a failure with `pnpm verify <scenario> --seed <n>`. */
+  readonly seed: number;
+  /** The only source of randomness a scenario may use. Never call Math.random. */
+  readonly random: () => number;
+}
 
 /**
  * An end-to-end behaviour the system must have, driven against real processes.
@@ -10,6 +25,16 @@ import type { Check } from "./report.ts";
  *   that will make it active. `verify check-registry` fails if that issue is
  *   closed while the scenario is still pending, so "done" can't happen without
  *   the scenario passing.
+ *
+ * Rules for writing `run` (also in AGENTS.md):
+ * - Start your own sync server on port 0 (OS-assigned) and register it with
+ *   `teardown`. Never depend on a server that happens to be running.
+ * - Connect with Node's built-in `WebSocket` client and the real encoders from
+ *   `@lockstep/protocol`. Never hand-write frames, except malformed ones on purpose.
+ * - Authenticate with real signed room tokens from a per-run test key pair.
+ *   Never use placeholder strings like `room:user:role`.
+ * - Every step asserts something observable. A step that can't fail isn't a check.
+ * - Wait on events (a message, a close code) with a timeout, never on a fixed sleep alone.
  */
 export interface Scenario {
   readonly name: string;
@@ -21,7 +46,7 @@ export interface Scenario {
   /** Issue that implements this scenario. */
   readonly issue: number;
   readonly status: "active" | "pending";
-  readonly run?: (config: Config) => Promise<Check[]>;
+  readonly run?: (ctx: ScenarioContext) => Promise<Check[]>;
 }
 
 export const scenarios: readonly Scenario[] = [
