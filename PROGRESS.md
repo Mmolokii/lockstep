@@ -2,19 +2,19 @@
 
 _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 
-> Narrative status. The GitHub Project is the system of record for individual issues. How work is run: [docs/process/project-management.md](docs/process/project-management.md).
+> Narrative status. The [Lockstep board](https://github.com/users/Mmolokii/projects/5) is the system of record for individual issues. How work is run: [docs/process/project-management.md](docs/process/project-management.md).
 
 ## Milestones
 
 | Milestone | Status |
 |---|---|
 | M0 · Foundations | ✅ Done ([#1](https://github.com/Mmolokii/lockstep/pull/1)) |
-| M1 · CRDT lab | 🟡 In review (`feat/m1-crdt-lab`) |
-| M2 · Editor, local-first | ⚪ Not started |
+| M1 · CRDT lab | ✅ Done ([#2](https://github.com/Mmolokii/lockstep/pull/2)) |
+| M2 · Local-first editor | 🔵 Next: Cycle 1 (from 2026-11-30) |
 | M3 · Sync server v1 | ⚪ Not started |
-| M3.5 · Early deploy | ⚪ Not started |
+| M3.5 · First deploy | ⚪ Not started |
 | M4 · Persistence | ⚪ Not started |
-| M5 · Auth, projects, permissions | ⚪ Not started |
+| M5 · Access control | ⚪ Not started |
 | M6a · Collaboration core | ⚪ Not started |
 | M6b · Collaboration complete | ⚪ Not started |
 | M7 · Scale and observability | ⚪ Not started |
@@ -38,7 +38,7 @@ _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 
 - Merged in #1. All GitHub Actions are pinned to commit SHAs (CodeQL alert)
 
-## M1 status
+## M1 status (done)
 
 **Done**
 - `packages/crdt-lab`: RGA text CRDT (Lamport ids, origin-based inserts, tombstones, dedupe, causal buffering)

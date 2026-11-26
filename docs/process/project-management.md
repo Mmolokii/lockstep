@@ -1,6 +1,6 @@
 # How Lockstep is run
 
-> The operating manual for planning, tracking and finishing work on Lockstep. GitHub Issues and Projects are the system of record, and `PROGRESS.md` carries the narrative. If this document and the board disagree, fix one of them the same day.
+> The operating manual for planning, tracking and finishing work on Lockstep. **Board:** [github.com/users/Mmolokii/projects/5](https://github.com/users/Mmolokii/projects/5). GitHub Issues and Projects are the system of record, and `PROGRESS.md` carries the narrative. If this document and the board disagree, fix one of them the same day.
 
 **Contents**
 
@@ -132,7 +132,7 @@ One Project, "Lockstep", owned by the user account and linked to the repo.
 
 ### 2.3 The Project: views
 
-Six views. Each one answers a single question.
+Six views. Each one answers a single question. Views, filters and visible fields are created through the API. Grouping, sorting and roadmap date fields can only be set in the GitHub UI.
 
 | View | Layout | Filter / grouping / sort | Question it answers |
 |---|---|---|---|
