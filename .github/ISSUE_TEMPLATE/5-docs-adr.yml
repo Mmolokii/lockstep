@@ -1,0 +1,38 @@
+name: Docs / ADR / RFC
+description: A decision record, design proposal, runbook section or other document.
+title: ""
+labels: ["type:docs"]
+body:
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Document type
+      options:
+        - ADR (a decision and its alternatives)
+        - RFC (a design proposal for cross-cutting or large work)
+        - Runbook (an operational procedure)
+        - Report (load test, security review, metrics)
+        - Other (README, DESIGN, protocol, guides)
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Question or decision
+      description: What must this document decide or explain?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and constraints
+  - type: textarea
+    id: options
+    attributes:
+      label: Options to evaluate
+      description: For ADRs and RFCs. At least two real options.
+  - type: textarea
+    id: unblocks
+    attributes:
+      label: What this unblocks
+      placeholder: "#..."

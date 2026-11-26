@@ -2,6 +2,8 @@
 
 _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 
+> Narrative status. The GitHub Project is the system of record for individual issues. How work is run: [docs/process/project-management.md](docs/process/project-management.md).
+
 ## Milestones
 
 | Milestone | Status |
@@ -13,9 +15,11 @@ _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 | M3.5 · Early deploy | ⚪ Not started |
 | M4 · Persistence | ⚪ Not started |
 | M5 · Auth, projects, permissions | ⚪ Not started |
-| M6 · Collaboration UX | ⚪ Not started |
+| M6a · Collaboration core | ⚪ Not started |
+| M6b · Collaboration complete | ⚪ Not started |
 | M7 · Scale and observability | ⚪ Not started |
-| M8 · Deploy, release, docs | ⚪ Not started |
+| M8 · Production launch | ⚪ Not started |
+| M9 · Extras | ⚪ Not started |
 
 ## M0 status (done)
 
@@ -48,6 +52,12 @@ _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 
 - CI doesn't run Postgres or Redis service containers yet. They're added in M4, when tests first need them.
 - `pnpm build` runs no tasks yet. No package has a build script until the apps arrive (M2, M3).
+
+## Tech debt register
+
+Open `type:tech-debt` issues, by title. Each one is logged in the PR that takes the shortcut.
+
+_None yet._
 
 ## Decisions pending
 

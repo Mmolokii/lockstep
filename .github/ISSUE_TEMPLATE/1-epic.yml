@@ -1,0 +1,38 @@
+name: Epic
+description: A workstream that owns an outcome or a cross-cutting concern. Work is tracked as sub-issues.
+title: "[Epic] "
+labels: ["type:epic"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Epics are rare. See `docs/process/project-management.md` §1 before creating one.
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: What is true when this workstream has done its job? Write it as observable behaviour.
+    validations:
+      required: true
+  - type: textarea
+    id: owns
+    attributes:
+      label: Cross-cutting concern owned
+      description: The concern this epic is accountable for across the codebase, and the code and docs it owns.
+      placeholder: "The wire contract: packages/protocol, docs/protocol.md"
+    validations:
+      required: true
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Epic-specific Definition of Done
+      description: Extra checks any PR touching this concern must pass (on top of the project DoD).
+      placeholder: "- Update docs/protocol.md\n- Fuzz suite passes"
+  - type: textarea
+    id: milestones
+    attributes:
+      label: Milestones this epic contributes to
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Out of scope

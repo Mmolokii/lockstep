@@ -1,0 +1,154 @@
+{
+  "labels": [
+    {
+      "name": "type:epic",
+      "color": "3e1f79",
+      "description": "Workstream parent issue; work tracked as sub-issues"
+    },
+    { "name": "type:feature", "color": "1d76db", "description": "User-visible capability" },
+    { "name": "type:bug", "color": "d73a4a", "description": "Contradicts the spec, docs or tests" },
+    {
+      "name": "type:reliability",
+      "color": "e99695",
+      "description": "Failure handling, limits, drain, chaos"
+    },
+    {
+      "name": "type:security",
+      "color": "b60205",
+      "description": "AuthN/Z, hardening, threat model, supply chain"
+    },
+    {
+      "name": "type:observability",
+      "color": "5319e7",
+      "description": "Metrics, logs, traces, dashboards, alerts"
+    },
+    {
+      "name": "type:infra",
+      "color": "0e8a16",
+      "description": "CI/CD, environments, deploys, build"
+    },
+    {
+      "name": "type:perf",
+      "color": "fbca04",
+      "description": "Latency, throughput, capacity, load tests"
+    },
+    { "name": "type:docs", "color": "0075ca", "description": "ADRs, RFCs, runbook, protocol docs" },
+    {
+      "name": "type:spike",
+      "color": "f9d0c4",
+      "description": "Timeboxed investigation; output is a decision"
+    },
+    {
+      "name": "type:tech-debt",
+      "color": "a2662c",
+      "description": "A known shortcut being paid down"
+    },
+    {
+      "name": "type:chore",
+      "color": "cfd3d7",
+      "description": "Maintenance with no behaviour change"
+    },
+
+    {
+      "name": "area:editor",
+      "color": "c5def5",
+      "description": "packages/editor, CodeMirror, Yjs binding"
+    },
+    { "name": "area:web", "color": "c5def5", "description": "apps/web pages and API" },
+    { "name": "area:sync-server", "color": "c5def5", "description": "apps/sync" },
+    { "name": "area:sync-client", "color": "c5def5", "description": "packages/sync-client" },
+    {
+      "name": "area:protocol",
+      "color": "c5def5",
+      "description": "packages/protocol, docs/protocol.md"
+    },
+    {
+      "name": "area:persistence",
+      "color": "c5def5",
+      "description": "packages/db, update log, snapshots"
+    },
+    {
+      "name": "area:auth",
+      "color": "c5def5",
+      "description": "Sign-in, roles, tokens, share links"
+    },
+    {
+      "name": "area:collab-ux",
+      "color": "c5def5",
+      "description": "Presence, cursors, follow, file tree, status, devtools"
+    },
+    { "name": "area:history", "color": "c5def5", "description": "Versions, diff, restore, export" },
+    {
+      "name": "area:scaling",
+      "color": "c5def5",
+      "description": "Multi-instance fan-out, writer lock"
+    },
+    {
+      "name": "area:observability",
+      "color": "c5def5",
+      "description": "Telemetry code, dashboards, alerts"
+    },
+    {
+      "name": "area:ci-cd",
+      "color": "c5def5",
+      "description": "GitHub Actions, tests in CI, deploy pipeline"
+    },
+    { "name": "area:infra", "color": "c5def5", "description": "Docker, Fly, Vercel, Neon, Redis" },
+    { "name": "area:docs", "color": "c5def5", "description": "Documentation" },
+    {
+      "name": "area:process",
+      "color": "c5def5",
+      "description": "Project management and engineering process"
+    },
+
+    {
+      "name": "protocol-change",
+      "color": "d93f0b",
+      "description": "Alters wire bytes or close codes; update docs/protocol.md and fuzz suite"
+    },
+    {
+      "name": "schema-change",
+      "color": "d93f0b",
+      "description": "Alters the DB schema; needs an expand/contract plan"
+    },
+    {
+      "name": "needs-adr",
+      "color": "ededed",
+      "description": "Embeds a decision; ADR must merge with or before it"
+    },
+    {
+      "name": "needs-rfc",
+      "color": "ededed",
+      "description": "Design must be merged as an RFC before implementation"
+    },
+    {
+      "name": "security-sensitive",
+      "color": "b60205",
+      "description": "Touches auth, tokens, secrets or parsing; security checklist required"
+    },
+    {
+      "name": "user-decision",
+      "color": "fef2c0",
+      "description": "Waiting on an owner decision (spend, accounts, domain)"
+    },
+    {
+      "name": "no-issue",
+      "color": "ededed",
+      "description": "PR intentionally has no linked issue"
+    },
+    { "name": "dependencies", "color": "0366d6", "description": "Dependency updates" },
+    { "name": "good first issue", "color": "7057ff", "description": "Good for newcomers" },
+    { "name": "help wanted", "color": "008672", "description": "Extra attention is wanted" }
+  ],
+  "remove": [
+    "bug",
+    "documentation",
+    "duplicate",
+    "enhancement",
+    "invalid",
+    "question",
+    "wontfix",
+    "javascript",
+    "accessibility"
+  ]
+}

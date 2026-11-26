@@ -1,0 +1,31 @@
+name: Tech debt
+description: A known shortcut. Log it in the same PR that takes it.
+title: "Debt: "
+labels: ["type:tech-debt"]
+body:
+  - type: textarea
+    id: shortcut
+    attributes:
+      label: The shortcut
+      description: What was skipped or simplified, and where (file, PR).
+    validations:
+      required: true
+  - type: textarea
+    id: cost
+    attributes:
+      label: Cost of leaving it
+      description: Risk, slowdown or limitation it causes.
+    validations:
+      required: true
+  - type: textarea
+    id: trigger
+    attributes:
+      label: Trigger
+      description: The condition that makes paying it down urgent.
+      placeholder: "Before a second sync instance is deployed (M7)"
+    validations:
+      required: true
+  - type: textarea
+    id: fix
+    attributes:
+      label: Proposed fix

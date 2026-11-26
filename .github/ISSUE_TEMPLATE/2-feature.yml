@@ -1,0 +1,47 @@
+name: Feature
+description: A user-visible capability, written as a small, testable story.
+title: ""
+labels: ["type:feature"]
+body:
+  - type: textarea
+    id: story
+    attributes:
+      label: User story
+      description: Who needs what, and why.
+      placeholder: "As a viewer in a shared project, I want ... so that ..."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Observable behaviour someone else could verify. Prefer Given / When / Then.
+      placeholder: |
+        - Given ..., when ..., then ...
+        - Given ..., when ..., then ...
+    validations:
+      required: true
+  - type: textarea
+    id: approach
+    attributes:
+      label: Approach and notes
+      description: Sketch of the implementation, links to the RFC or ADR, open questions.
+  - type: checkboxes
+    id: nfr
+    attributes:
+      label: Non-functional checks this story needs
+      description: Tick the ones that apply. Each becomes part of this issue's Done.
+      options:
+        - label: Server-side authorisation for any new operation
+        - label: Input validation (Zod / path rules)
+        - label: Metrics and structured logs (no contents)
+        - label: Failure behaviour defined (timeouts, limits, what the user sees)
+        - label: Accessibility (keyboard, labels, never colour alone)
+        - label: Docs update (DESIGN, protocol, runbook)
+        - label: Changes the wire protocol (add `protocol-change`)
+        - label: Changes the database schema (add `schema-change`)
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      placeholder: "Blocked by #..."
