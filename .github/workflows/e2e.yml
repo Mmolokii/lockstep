@@ -1,0 +1,76 @@
+name: E2E
+
+# Playwright multi-user suite (2-3 concurrent editors, offline merge, viewer
+# read-only) on Chromium, Firefox and WebKit against the docker compose stack.
+# Local: pnpm infra:up && pnpm test:e2e
+#
+# Until the suite exists (#29) each job reports a notice and does nothing
+# else. That can't become permanent: the pipeline contract requires
+# e2e/package.json as soon as apps/web exists (pnpm verify check-contract).
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: E2E (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Is the e2e suite present?
+        id: suite
+        run: |
+          if [ -f e2e/package.json ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=E2E suite not implemented yet::Tracked in #29. The pipeline contract requires it once apps/web exists."
+            echo "E2E suite not implemented yet (#29). Nothing ran." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - if: steps.suite.outputs.present == 'true'
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+
+      - if: steps.suite.outputs.present == 'true'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - if: steps.suite.outputs.present == 'true'
+        name: Install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      - if: steps.suite.outputs.present == 'true'
+        name: Start the stack (docker compose)
+        run: pnpm infra:up
+
+      - if: steps.suite.outputs.present == 'true'
+        name: Install ${{ matrix.browser }}
+        run: pnpm --filter @lockstep/e2e exec playwright install --with-deps ${{ matrix.browser }}
+
+      - if: steps.suite.outputs.present == 'true'
+        name: Run the suite on ${{ matrix.browser }}
+        run: pnpm --filter @lockstep/e2e test:e2e --project=${{ matrix.browser }}
+
+      - if: failure() && steps.suite.outputs.present == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: playwright-report-${{ matrix.browser }}
+          path: e2e/playwright-report
+          retention-days: 7
