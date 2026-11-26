@@ -1,11 +1,11 @@
 {
-  "$comment": "Enforced by `pnpm verify check-budgets` after `pnpm build`. Sizes are gzip -9 sums of every matched file. A budget whose files don't exist yet must name the open issue that will create them.",
+  "$comment": "Chunk totals are enforced by `pnpm verify check-budgets` after `pnpm build` (gzip -9 sums of every matched file). Route budgets are enforced by e2e/tests/budgets.spec.ts in Chromium: the gzip size of every script a page downloads until it's ready. A budget whose files don't exist yet must name the open issue that will create them. Rationale: ADR 0009.",
   "budgets": [
     {
-      "name": "web: client JavaScript",
+      "name": "web: all client JavaScript (backstop)",
       "glob": "apps/web/.next/static/chunks/**/*.js",
-      "maxKB": 350,
-      "basis": "ADR 0004 measured CodeMirror 6 + Yjs at 209 KB gzip; the rest covers Next.js and React. Refine when #25 lands."
+      "maxKB": 650,
+      "basis": "Every chunk, including ones no page fetches until needed (13 of the 14 language grammars). 585 KB measured with the editor wired in (#27, Apple M4). A backstop against heavy additions; per-route budgets below say what users download. ADR 0009."
     },
     {
       "name": "sync: server bundle",
@@ -13,6 +13,14 @@
       "maxKB": 400,
       "pendingIssue": 47,
       "basis": "esbuild bundle of the sync server (#47). Guards against accidentally bundling heavy dependencies."
+    }
+  ],
+  "routes": [
+    {
+      "path": "/",
+      "ready": "h1",
+      "maxKB": 150,
+      "basis": "131.5 KB measured in Chromium (Apple M4) with the editor wired in: Next.js, React and the shell. The editor must never load here."
     }
   ]
 }

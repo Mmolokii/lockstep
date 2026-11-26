@@ -102,7 +102,7 @@ The runner checks preconditions, releases everything a scenario registers (pass,
 | Every package listed with required scripts; sync has integration tests; web has e2e | `check-contract` |
 | CI tests against the same Postgres and Redis images as local | `check-contract` |
 | Pending work names an open issue | `check-registry`, `check-contract`, `check-budgets` |
-| Bundles stay within budget | `check-budgets` |
+| Bundles stay within budget: per route (what a page downloads) and in total | `e2e/tests/budgets.spec.ts` (Chromium), `check-budgets` ([ADR 0009](docs/adr/0009-route-bundle-budgets.md)) |
 | Migrations are expand-only | `check-migrations` (deploy gate) |
 | Actions pinned to SHAs; no untrusted data interpolated into `run:`; least-privilege permissions | `scripts/workflows.test.mjs` |
 | CI and local run the same steps | `ci:local` parses `ci.yml` |
