@@ -240,6 +240,21 @@ importers:
         specifier: 5.1.2
         version: 5.1.2(@types/node@24.19.3)(@vitest/coverage-v8@5.1.2)(vite@8.3.8(@types/node@24.19.3))
 
+  verify:
+    devDependencies:
+      '@types/node':
+        specifier: ^24.19.3
+        version: 24.19.3
+      '@vitest/coverage-v8':
+        specifier: 5.1.2
+        version: 5.1.2(vitest@5.1.2)
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@types/node@24.19.3)(@vitest/coverage-v8@5.1.2)(vite@8.3.8(@types/node@24.19.3))
+
 packages:
 
   '@babel/helper-string-parser@7.29.15':
