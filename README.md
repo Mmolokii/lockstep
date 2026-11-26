@@ -55,6 +55,7 @@ Contributors and AI agents: start with [AGENTS.md](AGENTS.md).
 | `e2e/` | Playwright end-to-end suite |
 | `apps/sync` | WebSocket sync server _(M3)_ |
 | `packages/protocol` | Wire protocol and close codes |
+| `packages/editor` | CodeMirror 6 editor bound to Yjs |
 | `packages/crdt-lab` | A toy CRDT built from first principles, with convergence tests against it and Yjs |
 | `infra/` | Docker Compose, Prometheus, Grafana |
 | `docs/` | ADRs, prior art, protocol, runbook |
