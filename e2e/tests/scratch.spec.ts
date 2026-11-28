@@ -1,45 +1,5 @@
-import { expect, type Page, test } from "@playwright/test";
-
-/** Number of updates y-indexeddb has stored for the scratch document. */
-const storedUpdates = (page: Page) =>
-  page.evaluate(
-    () =>
-      new Promise<number>((resolve, reject) => {
-        const open = indexedDB.open("lockstep:scratch");
-        open.onerror = () => reject(open.error);
-        open.onsuccess = () => {
-          const db = open.result;
-          if (!db.objectStoreNames.contains("updates")) {
-            db.close();
-            resolve(0);
-            return;
-          }
-          const count = db.transaction("updates", "readonly").objectStore("updates").count();
-          count.onsuccess = () => {
-            db.close();
-            resolve(count.result);
-          };
-          count.onerror = () => reject(count.error);
-        };
-      }),
-  );
-
-const editor = (page: Page) => page.getByRole("textbox", { name: "scratch.ts" });
-
-async function openScratch(page: Page) {
-  await page.goto("/scratch");
-  await expect(editor(page)).toBeVisible();
-  // The TypeScript grammar is a lazy chunk; let it arrive before going offline.
-  await page.waitForLoadState("networkidle");
-}
-
-/** Types into the editor and waits until IndexedDB holds the new updates. */
-async function typeAndPersist(page: Page, text: string) {
-  const before = await storedUpdates(page);
-  await editor(page).click();
-  await page.keyboard.type(text);
-  await expect.poll(() => storedUpdates(page)).toBeGreaterThan(before);
-}
+import { expect, test } from "@playwright/test";
+import { editor, openScratch, typeAndPersist } from "../support/scratch.ts";
 
 test("reloading keeps the content", async ({ page }) => {
   await openScratch(page);

@@ -1,11 +1,12 @@
 import { IndexeddbPersistence } from "y-indexeddb";
 import * as Y from "yjs";
+import { syncAcrossTabs } from "./tab-sync.ts";
 
 /**
  * A Y.Doc kept in this browser's IndexedDB (y-indexeddb), so edits survive a
- * reload and keep working with the network off. Every local update is written
- * as it happens; nothing here talks to a server. The sync client (M3) adds the
- * network on top of the same doc.
+ * reload and keep working with the network off, and shared live with other
+ * tabs of this origin over a BroadcastChannel. Nothing here talks to a
+ * server; the sync client (M3) adds the network on top of the same doc.
  */
 export interface LocalDoc {
   readonly doc: Y.Doc;
@@ -28,12 +29,17 @@ export function storageName(name: string): string {
 
 export function openLocalDoc(name: string): LocalDoc {
   const doc = new Y.Doc();
-  const persistence = new IndexeddbPersistence(storageName(name), doc);
+  const key = storageName(name);
+  const persistence = new IndexeddbPersistence(key, doc);
+  const tabs = syncAcrossTabs(doc, key);
+  // Announce after stored state is in, so open tabs only send what's missing.
+  const whenLoaded = persistence.whenSynced.then(() => tabs.announce());
   return {
     doc,
     text: doc.getText(TEXT_FIELD),
-    whenLoaded: persistence.whenSynced.then(() => undefined),
+    whenLoaded,
     destroy: async () => {
+      tabs.close();
       await persistence.destroy();
       doc.destroy();
     },

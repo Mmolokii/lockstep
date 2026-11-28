@@ -10,7 +10,7 @@ _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 |---|---|
 | M0 · Foundations | ✅ Done ([#1](https://github.com/Mmolokii/lockstep/pull/1)) |
 | M1 · CRDT lab | ✅ Done ([#2](https://github.com/Mmolokii/lockstep/pull/2)) |
-| M2 · Local-first editor | 🟡 In progress |
+| M2 · Local-first editor | ✅ Done ([#29](https://github.com/Mmolokii/lockstep/issues/29): exit test) |
 | M3 · Sync server v1 | ⚪ Not started |
 | M3.5 · First deploy | ⚪ Not started |
 | M4 · Persistence | ⚪ Not started |
@@ -48,16 +48,20 @@ _Last updated: 2026-11-26_ · **Build mode** from M1 on: no learner tasks
 - Benchmark toy vs Yjs, with results in ADR 0003 (Yjs ~4–10× faster; typing then deleting 10k chars leaves 24 bytes vs 1.6 MB)
 - ADR 0003: use Yjs as the CRDT
 
-## M2 status (in progress)
+## M2 status (done)
 
 **Done**
 - **#112** (closes #25): Next.js 16 shell with baseline security headers; Playwright on Chromium, Firefox and WebKit against the production build; web bundle budget enforced (170 KB of 350 KB gzip). The e2e suite caught `upgrade-insecure-requests` blanking WebKit over plain HTTP on its first run
 - **#113** (closes #26): `packages/editor`, CodeMirror 6 bound to a Y.Text. 14 languages, each a lazy chunk; light and dark themes; Yjs-scoped undo; keyboard-only use
 - **#115** (closes #114): Turbo strict env mode was dropping `LOCKSTEP_HTTPS` from the build; the Vercel skip rule now builds whenever it can't tell. Production is live at https://lockstep-ebon.vercel.app with the full header set (checked from the Cape Town edge)
-- **#117** (closes #116, in review): route budgets measured in Chromium ([ADR 0009](docs/adr/0009-route-bundle-budgets.md)). `/` 131.5 KB of 150; `/scratch` 328.9 KB of 350; all chunks 585 KB of a 650 KB backstop
-- **#27** (in review): `/scratch` editor persisted to IndexedDB (y-indexeddb); reload and offline editing covered by e2e
+- **#117** (closes #116): route budgets measured in Chromium ([ADR 0009](docs/adr/0009-route-bundle-budgets.md)). `/` 131.5 KB of 150; `/scratch` 328.9 KB of 350; all chunks 585 KB of a 650 KB backstop
+- **#118** (closes #27): `/scratch` editor persisted to IndexedDB (y-indexeddb); reload and offline editing covered by e2e. Live in production
+- **#119** (closes #28): cross-tab sync over BroadcastChannel, a small hand-written handshake (update / hello / sync), with no dependency
+- **#29**: the exit test, `e2e/tests/m2-exit.spec.ts`. Two tabs edit live in both directions, concurrent typing converges, one tab reloads, then **every tab closes** and a new one opens, so the content can only come from IndexedDB. 120/120 repeated runs passed on Chromium and WebKit (Apple M4); CI runs all three browsers
 
-**Next:** #28 cross-tab sync (BroadcastChannel), #29 the M2 exit e2e (two tabs plus reload)
+**Exit criterion met:** "two tabs edit the same file live, and a reload keeps the content".
+
+**Next:** M3, the sync server v1 (protocol, sync-client, in-memory rooms, reconnection, fuzz tests)
 
 ## Known issues
 
