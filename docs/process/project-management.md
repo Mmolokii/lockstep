@@ -366,7 +366,7 @@ Columns: **Type** · **Area** · **P**riority · **S**ize · **R**isk.
 | M3-07 | Backpressure on `bufferedAmount` | E11 | reliability | sync-server | P1 | S | M | A slow-consumer test shows disconnect at threshold, and memory stays bounded |
 | M3-08 | Server heartbeats and dead-connection reaping | E11 | reliability | sync-server | P1 | S | L | Half-open sockets are closed within the configured interval |
 | M3-09 | Graceful drain on SIGTERM (close 1012 within budget) | E11 | reliability | sync-server | P1 | S | M | Test: SIGTERM stops accepting, closes clients with 1012, exits within budget |
-| M3-10 | Health endpoints + ADR 0009: readiness ignores shared dependencies | E11 | reliability | sync-server | P1 | S | M | `/healthz`, `/readyz` (false only when draining); ADR merged. `needs-adr` |
+| M3-10 | Health endpoints + ADR 0012: readiness ignores shared dependencies | E11 | reliability | sync-server | P1 | S | M | `/healthz`, `/readyz` (false only when draining); ADR merged. `needs-adr` |
 | M3-11 | Structured JSON logs with connection IDs, no contents | E10 | observability | sync-server, observability | P1 | S | L | A test asserts no payload bytes appear in logs |
 | M3-12 | Prometheus `/metrics` baseline | E10 | observability | sync-server, observability | P1 | M | L | Connections, rooms, messages and bytes by type, rejects by reason, event-loop lag; scraped by local Prometheus |
 | M3-13 | sync-client state machine with honest status and pending count | E4 | feature | sync-client | P1 | M | M | `synced` only after an ack covers local updates; unit tests with a fake socket |
