@@ -42,7 +42,7 @@ $ gh api repos/Mmolokii/lockstep --jq '{squash: .allow_squash_merge, merge: .all
 | `Analyze (javascript-typescript)`, `Analyze (actions)` | security.yml | CodeQL security-extended |
 | `Dependency audit and authorisation` | security.yml | `pnpm audit --audit-level high` + the viewer-rejected scenario |
 | `review` | security.yml | Dependency review, failing on high |
-| `E2E (chromium)`, `E2E (firefox)`, `E2E (webkit)` | e2e.yml | Multi-user Playwright suite (posts a notice until #29) |
+| `E2E (chromium)`, `E2E (firefox)`, `E2E (webkit)` | e2e.yml | Playwright suite: shell, editor, persistence, cross-tab sync, route budgets, M2 exit test |
 
 Before adding a check here, confirm it has reported at least once. Requiring a check that never reports blocks every PR.
 

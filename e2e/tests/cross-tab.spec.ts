@@ -1,11 +1,5 @@
-import { expect, type Page, test } from "@playwright/test";
-
-const editor = (page: Page) => page.getByRole("textbox", { name: "scratch.ts" });
-
-async function openScratch(page: Page) {
-  await page.goto("/scratch");
-  await expect(editor(page)).toBeVisible();
-}
+import { expect, test } from "@playwright/test";
+import { editor, openScratch } from "../support/scratch.ts";
 
 test("two tabs edit the same file live", async ({ context }) => {
   // Tabs in one browser context share an origin and profile, like a user's tabs.
